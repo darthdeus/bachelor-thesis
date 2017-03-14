@@ -27,35 +27,3 @@ We've chosen to use MCTS to represent the artificial intelligence (*AI*) of a sk
 The procedural generation is done using evolutionary algorithms, which begin by generating an initial randomized population. Each member of the population is characterized by his genes, which are altered throughout the evolution. During each step, the population is evaluated using a fitness function, which judges how well each member matches the criteria.
 
 For our purposes, the fitness function describes how well balanced is the encounter, which is measured using MCTS and a handful of rule-based AIs. We also employ a few heuristics to make sure the encounters fulfill additional criteria, such as game length, etc.
-
-
-
----
-
-~~The PCG algorithm takes one team as an input and generates a suitable opponent in a way that the resulting matchup is balanced, which is verified using AI vs AI gameplay.~~
-
-- co je znamo
-  - PCG se pouziva na mapy
-  - PCG na postavy skoro nikdo nedela obecne, neumi se to?
-  - PCG na cele hry se neumi
-
-- cil prace
-  - ukazat ze 1. a 2. plati? (viz dole)
-
-- je to dulezite
-  - siroke aplikace pro ruzne RPG hry
-  - moznost pro prakticky neomezeny gameplay
-  - hry ktere prizpusobuji obtiznost hraci podle toho, jak si hrac vybere
-
-- volba metody
-  - pouzivame MCTS pro simulaci hrace
-  - pouzivame evoluci pro generovani balanced encounteru
-
-  - 1. hypoteza: MCTS aproximuje hrace dostatecne dobre
-    - jak to dokazu?
-    - staci ukazat, ze MCTS porazi ruzne pravidlove AIcka? (potrebuju ruzne, nebo mi staci jedno?)
-
-  - 2. hypoteza: vybrane herni mechaniky umoznuji aby dva velmi rozdilne tymy byly vyvazene
-    - pokud MCTS funguje, tak staci pro statisticky vyznamny pocet dvojic ukazat, ze 2) plati?
-
-  - 3. hypoteza: umim generovat dva ruzne tymy co maji ~50% winrate
