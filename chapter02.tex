@@ -1,6 +1,6 @@
 \chapter{Analysis of Game Mechanics}
 
-Two teams fight on a hexagonal map (\emph{arena}) of small size (radius of 5-10
+Two teams fight on a hexagonal map (\emph{arena}) of small size (radius of 5\-10
 hexes).  \unsure{screenshot mapy?} Each team consists of a small number of
 player controller characters (\emph{mages} for short), and each mage has a small
 number of \emph{abilities}, health, and \emph{action points}. Players take turns,
@@ -23,6 +23,10 @@ Both debuffs and AOEs also have a lifetime, which specifies how many turns
 \todo{znova turn} the effect lasts.
 
 
+\todo{popsat druhy akci}
+\todo{popsat jak funguje simulator}
+\todo{popsat strukturu}
+
 
 \section{High level actions of Monte-Carlo Tree Search}
 
@@ -35,10 +39,27 @@ that represent most of what a player might want to do.
 \item [DefensiveMove] Look for a place on the map that is not visible to the enemy and move there (to avoid damage).
 \end{description}
 
+Combined actions help significantly reduce the depth of the game tree. Most
+prominent is the fact that we don't allow arbitrary \emph{Move} actions, but
+only \emph{DefensiveMove}.
+
 \section{Title of the second subchapter of the second chapter}
 
-
 \chapter{Encounter balancing}
+
+In order to evaluate the balance of a matchup, we came up with the following fitness function.
+
+
+During the experiment we encountered multiple ways ES tried to exploit the game
+mechanics to maximize the balance fitness function in ways that were
+undesirable. One example being when the resulting games end up being short as
+the algorithm generates mages with lots of AOE abilities that cover the whole
+map in the first turn, resulting in immediate death of all characters.
+
+We balance this by introducing an additional fitness function for game length
+in the form of a cumulative normal distribution with $\sigma = 10$ and $\mu =
+3$.\unsure{overit jestli to tak fakt je}.  This prevents ES from moving towards
+short games.
 
 \section{Evolution Strategies}
 
