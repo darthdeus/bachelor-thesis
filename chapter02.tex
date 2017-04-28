@@ -23,7 +23,17 @@ Both debuffs and AOEs also have a lifetime, which specifies how many turns
 \todo{znova turn} the effect lasts.
 
 
-\section{Title of the first subchapter of the second chapter}
+
+\section{High level actions of Monte-Carlo Tree Search}
+
+After some experimentation, we've settled down for three high level actions
+that represent most of what a player might want to do.
+
+\begin{description}[align=right,labelwidth=3cm]
+\item [AbilityUse] Use an ability targeting an enemy that is already in range.
+\item [AttackMove] Move into the range of an enemy and use an ability.
+\item [DefensiveMove] Look for a place on the map that is not visible to the enemy and move there (to avoid damage).
+\end{description}
 
 \section{Title of the second subchapter of the second chapter}
 
