@@ -1,18 +1,53 @@
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 
-An increasing number of computer games is using procedural content generation (PCG) as one of their core mechanics. This can be in different contexts, most commonly for generating new levels (Diablo [Xcitace]). Occasionally games even generate player collectible items (Borderlands [Xcitace]), but there has not been much research on the use of procedural generation for balancing encounters in RPG games. By this we mean procedurally generating enemies that can be defeated by the player, but pose a challenge. A crucial criteria here is that the balance is not simply achieved by creating the enemy as an exact clone of the player, but rather explore the search-space to find an enemy that is not only balanced, but also different from the player.
+An increasing number of computer games is using procedural content generation
+(PCG) as one of their core mechanics. This is in different contexts, most
+commonly for generating new levels \todo{Diablo citace}. Occasionally games
+even generate player collectible items \todo{Borderlands citace}. However,
+there has not been much research on the use of procedural generation for
+balancing encounters in RPG games. By this we mean procedurally generating
+enemies that can be defeated by the player, but pose a challenge. A crucial
+criteria here is that the balance is not simply achieved by creating the enemy
+as an exact clone of the player, but rather explore the search-space to find an
+enemy that is not only balanced, but also different from the player.
 
-One particular application for this kind of PCG is automatic difficulty adjustments based on the player's skill. Another possible use could be automatic generation of new and unique enemies based on given constraints, which is the approach we chose in this thesis.
+One particular application for this kind of PCG is automatic difficulty
+adjustments based on the player's skill. Another possible use could be
+automatic generation of new and unique enemies based on given constraints,
+which is the approach we chose in this thesis.
 
-We have created a custom game with mechanics that are simple enough to simulate quickly, yet flexible enough to represent a large search space. There are two teams that fight in a hexagonal arena, each consists of a small number of player controlled characters (mages), and each mage has a small number of abilities. In each turn the player has control over one of his characters, and both move around the map and cast spells, in any order he wishes. The only limit is the number of action points the character has available, which are consumed both by movement and ability usage. The side that first eliminates the opposing team wins.
+We have created a custom game with mechanics that are simple enough to simulate
+quickly, yet flexible enough to represent a large search space. There are two
+teams that fight in a hexagonal arena, each consists of a small number of
+player controlled characters (mages), and each mage has a small number of
+abilities. In each turn the player has control over one of his characters, and
+both move around the map and cast spells, in any order he wishes. The only
+limit is the number of action points the character has available, which are
+consumed both by movement and ability usage. The side that first eliminates the
+opposing team wins.
 
-All information is visible to all players, and all actions are completely deterministic. There is no time limit for the player action, which means the player could theoretically calculate a perfect move given enough time.
+All information is visible to all players, and all actions are completely
+deterministic. There is no time limit for the player action, which means the
+player could theoretically calculate a perfect move given enough time.
 
-The goal of this thesis is to explore PCG options for balancing encounters in turn-based RPG-like games. We design a simple game with flexible mechanics, and build an AI that can be used to approximate the player. We then use genetic algorithms to evolve balanced opponents for the given player team, using AI vs AI combat as a fitness function.
+The goal of this thesis is to explore PCG options for balancing encounters in
+turn-based RPG-like games. We design a simple game with flexible mechanics, and
+build an AI that can be used to approximate the player. We then use genetic
+algorithms to evolve balanced opponents for the given player team, using AI vs
+AI combat as a fitness function.
 
 \subsection*{Organization}
 
-In Chapter 1 we begin by defining the scope of the work, the used methods, and list related work. Chapter 2 follows by exploring our game mechanics in detail and explaining the choices behind them. Next in Chapter 3 we will go over implementation details of the methodology, such as how the game simulator is implemented, the choice of technology, and algorithm choices in the experiments.
+In Chapter 1 \unsure{nema byt kapitola 1 introduction?} we begin by defining
+the scope of the work, the used methods, and list related work. Chapter 2
+follows by exploring our game mechanics in detail and explaining the choices
+behind them. Next in Chapter 3 we will go over implementation details of the
+methodology, such as how the game simulator is implemented, the choice of
+technology, and algorithm choices in the experiments.
 
-Chapter 4 describes what experiments have been done with results discussed in Chapter 5. Lastly, Chapter 6 serves as the user and developer documentation, describing implementation detail not relevant to the methodology mentioned in Chapter 3. Chapter 7 closes with a conclusion and possibilities for future work.
+Chapter 4 describes what experiments have been done with results discussed in
+Chapter 5. Lastly, Chapter 6 serves as the user and developer documentation,
+describing implementation detail not relevant to the methodology mentioned in
+Chapter 3. Chapter 7 closes with a conclusion and possibilities for future
+work.
