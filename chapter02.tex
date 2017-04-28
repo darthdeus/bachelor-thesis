@@ -1,6 +1,26 @@
 \chapter{Analysis of Game Mechanics}
 
-Two teams fight on a hexagonal map \unsure{screenshot mapy?}
+Two teams fight on a hexagonal map (\emph{arena}) of small size (radius of 5-10
+hexes).  \unsure{screenshot mapy?} Each team consists of a small number of
+player controller characters (\emph{mages} for short), and each mage has a small
+number of \emph{abilities}, health, and \emph{action points}. Players take turns,
+during which each player has control over one of his mages. The player can
+issue commands to move around the arena and use abilities. Both movement and
+ability usage costs action points, which are restored at the end of the turn.
+Moving one hex costs one action point. The cost of using an ability varies, and
+is one of the parameters that we optimize for when looking for a balanaced
+game. An ability can also have a \emph{cooldown}, which prevents repeated usage
+for a given number of turns \todo{znovu rozlisovat turn}. Note that the
+cooldown can be zero, which means the ability can be used multiple times per
+turn \todo{turn}.
+
+Abilities can do direct damage to an enemy mage, apply a \emph{debuff} (causing
+damage and decreasing action points over time), and create an area of effect
+(\emph{AOE}) debuff that spans multiple hexes in the arena. Both the debuffs and
+AOEs are applied at the end of each turn \todo{rozlisovat turn maga a turn hry
+(round?)}, which happens after both players finish playing all their mages.
+Both debuffs and AOEs also have a lifetime, which specifies how many turns
+\todo{znova turn} the effect lasts.
 
 
 \section{Title of the first subchapter of the second chapter}
