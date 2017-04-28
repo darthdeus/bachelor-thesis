@@ -226,3 +226,4 @@ TSWLatexianTemp*
 # End of https://www.gitignore.io/api/latex
 #
 thesis.pdf
+*.xmpi
