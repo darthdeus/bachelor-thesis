@@ -29,16 +29,21 @@ Our initial implementation of generating the encounters was using Simulated
 Annealing (\todo{reference}). However, we had difficulty converging to good
 results \todo{fuj, napsat jinak}.
 
-As a result, we ran an experiment to sample the search space at roughly 20 million
-different points, and measured the change in fitness in the neighbourhood of each point.
-We found that in each point's neighbourhood, there are roughly 5 times more points that have
-worse fitness than the ones that are an improvement over the current point. We also found that
-most of these downward changes were much steeper between 4-7x than the improving points.
+As a result, we ran an experiment to sample the search space at roughly 20
+million different points, and measured the change in fitness in the
+neighbourhood of each point. We found that in each point's neighbourhood,
+there are roughly 5 times more points that have worse fitness than the ones
+that are an improvement over the current point. We also found that most of
+these downward changes were much steeper between 4-7x than the improving
+points. Our suspicion is that this is the main cause of failure of
+Simmulated Annealing, which simply fails to find the upward slope.
 
-Our suspicion is that this is the main cause of failure of Simmulated Annealing, which simply
-fails to find the upward slope.
-
-For this reason we chose to try another approach, specificially Evolution Strategies (\todo{reference})
+For this reason we chose to try another approach, specificially Evolution
+Strategies (\todo{reference}). In short, we take the initial DNA vector,
+generate around 50 neighbours in the search space, evaluate their fitness
+and take their weighted sum as the new current DNA. This process is iterated
+until a DNA with suitable fitness is found. We have found this approach to
+consistently converge much faster than simulated annealing.
 
 \section{Choice of the Fitness Function}
 

@@ -1,12 +1,8 @@
-\chapter{Game Mechanics}
+\chapter{Game Rules and Mechanics}
 
-\section{Motivation for a Custom Game}
-
-- game that can generalize to real life scenarios
-- simple mechanics that are representative
-- fast to simulate
-
-\section{Game Mechanics in Detail}
+For the purposes of this thesis we'll only stick to turn-based gameplay. We
+still wanted our game to be general enough so that a wide variety of
+playstyles can be represented within the game rules.
 
 Two teams fight on a hexagonal map (\emph{arena}) of small size (radius of
 5-10 hexes). Each team consists of a small number of player controller
@@ -20,9 +16,6 @@ of the parameters that we optimize for when looking for a balanaced game. An
 ability can also have a \emph{cooldown}, which prevents repeated usage for a
 given number of turns \todo{turn}. Note that the cooldown can
 be zero, which means the ability can be used multiple times per turn
-\todo{turn}.
-
-\missingfigure{obrazek areny?}
 
 Abilities can do direct damage to an enemy mage, apply a \emph{debuff} (causing
 damage and decreasing action points over time), and create an area of effect
@@ -32,4 +25,34 @@ AOEs are applied at the end of each turn \todo{rozlisovat turn maga a turn hry
 Both debuffs and AOEs also have a lifetime, which specifies how many turns
 \todo{znova turn} the effect lasts.
 
+The motivation for having cooldowns is that it allows us to generate powerful
+abilities that don't necessarily take up the whole turn of the player by costing
+a lot of action points. If the ability is cheap, but has a large cooldown, it can
+serve a strategic purpose, as the player might want to prepare his position in order
+to use the ability when the cooldown wears off.
+
+AOE abilities also improve positional gameplay, as they can be used to force the enemy
+player to move out of position.
+
+\missingfigure{obrazek areny?}
+
 \section{Simulator}
+
+Our game is represented as a single \emph{state} object onto which \emph{actions} can be applied
+to transition to the next state. The possible actions are:
+
+\begin{description}[align=right,labelwidth=3cm]
+\item [AbilityUse] Use an ability targeting an enemy that is already in range.
+\item [Move] Move the current mage to a different hex on the map.
+\item [EndTurn] Finish the current turn.
+\end{description}
+
+There are also a few special action types that:
+
+\begin{description}[align=right,labelwidth=3cm]
+\item [DefensiveMove] Serves the same purpose as \emph{Move}, but carries an
+additional information in the sense that \emph{DefensiveMove} can only be
+the last action of the turn.
+\item [AttackMove] Combines the \emph{Move} and \emph{AbilityUse} actions into one.
+\item [NullAction] Doesn't do anything and is mostly used as a placeholder in cases no action is possible.
+\end{description}
