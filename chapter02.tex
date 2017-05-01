@@ -1,15 +1,13 @@
 \chapter{Game AI}
 
+In order to test our encounter balancing approach, we needed to develop
+an AI that can be used to evaluate match setups.
+
 \section{Deciding on an algorithm for the AI}
 
-\section{Rule based AI}
-
-\section{Random AI}
-
-In order to establish a baseline when evaluating our rule-based AI and MCTS.
-The random-AI uses the same mechanics as MCTS for generating possible actions,
-but choses among them randomly. This can be seen as taking a random walk down
-the MCTS search tree.
+Since our game is very positional and with complicated effects that can span
+multiple turns, we decided that manual evaluation of the game state would be difficult.
+As a result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS).
 
 \section{Implementation of MCTS and high level actions}
 
@@ -25,3 +23,31 @@ that represent most of what a player might want to do.
 Combined actions help significantly reduce the depth of the game tree. Most
 prominent is the fact that we don't allow arbitrary \emph{Move} actions, but
 only \emph{DefensiveMove}.
+
+\section{Rule based AI}
+
+
+
+\section{Random AI}
+
+In order to establish a baseline when evaluating our \emph{Rule based AI} and MCTS.
+The \emph{Random AI} uses the same mechanics as MCTS for generating possible actions,
+but choses among them randomly. This can be seen as taking a random walk down
+the MCTS search tree.
+
+The benefit of re-using the MCTS tree is that we get a reasonable benchmark against
+both the rule-based AI and MCTS. If we generated actions completely at random, the \emph{Random AI}
+would walk around the map without doing much of anything, as the number of \emph{Move} actions
+greatly outnumbers the \emph{AbilityUse} actions. To give a rough estimate, in a 2v2 game where
+each mage has 10 action points, there would be at most 2 \emph{AbilityUse} actions at each point
+in the game, but up to 100 \emph{Move} actions (considering a small map of radius $~5$).
+
+There are also certain limitations imposed on the choice of MCTS actions to allow for faster search,
+from which the \emph{Random AI} can benefit. For example, it is not allowed to use a \emph{Move}
+action twice in a row, as these could always be collapsed into a single \emph{Move} actions to the
+final target destination. This limitation alone reduces the search tree greatly.
+
+By making the \emph{Random AI} smarter, we can get a better estimate of just how better
+both the \emph{Rule based AI}. This should serve as a benchmark against a player who would
+pick actions mostly at random, while also putting at least some thought into not doing things
+that are completely pointless, such as moving from A to B and back from B to A in a single turn.
