@@ -1,34 +1,17 @@
-\chapter{Analysis of Game Mechanics}
+\chapter{Game AI}
 
-Two teams fight on a hexagonal map (\emph{arena}) of small size (radius of
-5-10 hexes). Each team consists of a small number of player controller
-characters (\emph{mages} for short), and each mage has a small number of
-\emph{abilities}, \emph{health}, and \emph{action points}. Players take turns, during
-which each player has control over one of his mages. The player can issue
-commands to move around the arena and use abilities. Both movement and ability
-usage costs action points, which are restored at the end of the turn.  Moving
-one hex costs one action point. The cost of using an ability varies, and is one
-of the parameters that we optimize for when looking for a balanaced game. An
-ability can also have a \emph{cooldown}, which prevents repeated usage for a
-given number of turns \todo{znovu rozlisovat turn}. Note that the cooldown can
-be zero, which means the ability can be used multiple times per turn
-\todo{turn}.
+\section{Deciding on an algorithm for the AI}
 
-\missingfigure{obrazek areny?}
+\section{Rule based AI}
 
-Abilities can do direct damage to an enemy mage, apply a \emph{debuff} (causing
-damage and decreasing action points over time), and create an area of effect
-(\emph{AOE}) debuff that spans multiple hexes in the arena. Both the debuffs and
-AOEs are applied at the end of each turn \todo{rozlisovat turn maga a turn hry
-(round?)}, which happens after both players finish playing all their mages.
-Both debuffs and AOEs also have a lifetime, which specifies how many turns
-\todo{znova turn} the effect lasts.
+\section{Random AI}
 
+In order to establish a baseline when evaluating our rule-based AI and MCTS.
+The random-AI uses the same mechanics as MCTS for generating possible actions,
+but choses among them randomly. This can be seen as taking a random walk down
+the MCTS search tree.
 
-\todo{popsat druhy akci, jak funguje simulator, strukturu implementace}
-
-
-\section{High level actions of Monte-Carlo Tree Search}
+\section{Implementation of MCTS and high level actions}
 
 After some experimentation, we've settled down for three high level actions
 that represent most of what a player might want to do.
@@ -42,27 +25,3 @@ that represent most of what a player might want to do.
 Combined actions help significantly reduce the depth of the game tree. Most
 prominent is the fact that we don't allow arbitrary \emph{Move} actions, but
 only \emph{DefensiveMove}.
-
-\section{Title of the second subchapter of the second chapter}
-
-\chapter{Encounter balancing}
-
-In order to evaluate the balance of a matchup, we came up with the following fitness function.
-
-
-During the experiment we encountered multiple ways ES tried to exploit the game
-mechanics to maximize the balance fitness function in ways that were
-undesirable. One example being when the resulting games end up being short as
-the algorithm generates mages with lots of AOE abilities that cover the whole
-map in the first turn, resulting in immediate death of all characters.
-
-We balance this by introducing an additional fitness function for game length
-in the form of a cumulative normal distribution with $\sigma = 10$ and $\mu =
-3$.\unsure{overit jestli to tak fakt je}.  This prevents ES from moving towards
-short games.
-
-\section{Evolution Strategies}
-
-
-
-\section{Experiment}

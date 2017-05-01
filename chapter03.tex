@@ -1,0 +1,19 @@
+\chapter{Generating Encounters}
+
+In order to evaluate the balance of a matchup, we came up with the following fitness function.
+
+
+During the experiment we encountered multiple ways ES tried to exploit the game
+mechanics to maximize the balance fitness function in ways that were
+undesirable. One example being when the resulting games end up being short as
+the algorithm generates mages with lots of AOE abilities that cover the whole
+map in the first turn, resulting in immediate death of all characters.
+
+We balance this by introducing an additional fitness function for game length
+in the form of a cumulative normal distribution with $\sigma = 10$ and $\mu =
+3$.\unsure{overit jestli to tak fakt je}.  This prevents ES from moving towards
+short games.
+
+\section{Evolution Strategies}
+
+\section{Choice of the Objective Function}
