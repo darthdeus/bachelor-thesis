@@ -1,10 +1,50 @@
 \chapter{Generating Encounters}
 
-\section{Evolution Strategies}
+We approach generating encounters as a search based problems with two
+different approaches, Simulated Annealing and Evolution Strategies. (\todo{reference})
+
+To make the search algorithms as general as possible, we serialize our
+internal game representation into a single vector of normalized floating
+point values (DNA). The algorithm then doesn't need to understand our game
+mechanics and restriction, and can be applied to different configurations of
+the game independently.
+
+To avoid balancing via specific attributes, one can simply remove them from
+the serialization/deserialization routines that transform the game setup into
+the DNA vector, without altering any of the logic for balancing encounters.
+
+In the case of our experiments, we chose to stick with 2v2 games on a fixed map,
+where each mage has only two abilities. This was chosen both with respect to our
+questionnaire, and running time of the algorithms. Choosing a larger team setup or
+a bigger map (or many different maps) would be difficult for the participants,
+and would also take much longer to compute our experimental data.
+
+\missingfigure{mapa}
+
+- popsat jak funguje reprezentace DNA
+
+\section{Simulated Annealing and Evolution Strategies}
+
+Our initial implementation of generating the encounters was using Simulated
+Annealing (\todo{reference}). However, we had difficulty converging to good
+results \todo{fuj, napsat jinak}.
+
+As a result, we ran an experiment to sample the search space at roughly 20 million
+different points, and measured the change in fitness in the neighbourhood of each point.
+We found that in each point's neighbourhood, there are roughly 5 times more points that have
+worse fitness than the ones that are an improvement over the current point. We also found that
+most of these downward changes were much steeper between 4-7x than the improving points.
+
+Our suspicion is that this is the main cause of failure of Simmulated Annealing, which simply
+fails to find the upward slope.
+
+For this reason we chose to try another approach, specificially Evolution Strategies (\todo{reference})
 
 \section{Choice of the Fitness Function}
 
 In order to evaluate the balance of a matchup, we came up with the following fitness function.
+
+\todo{chybi popis}
 
 During the experiment we encountered multiple ways ES tried to exploit the game
 mechanics to maximize the balance fitness function in ways that were
