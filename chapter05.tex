@@ -1,1 +1,32 @@
-\chapter{Discussion of the results}
+\chapter{Experiments}
+
+To verify our implementation we conducted an experiment with N \todo{cislo}
+computer science students which each played 20 games and answered questions
+to measure the strength of our MCTS AI, the balance of the generated encounters,
+and the overall game difficulty.
+
+\missingfigure{grafy}
+
+The results show that most participants consider our MCTS AI to be strong
+enough to provide a challengem which is also proven by the 40\% winrate of
+the participants. \todo{aktualizovat cisla}
+
+Given the number of played games \todo{overit, ze jich mame dost} we can
+rule out the AI having a better setup in most of the scenarios. Based on the
+results, around 35\% \todo{aktualizovat cisla} of the games were balanced,
+which means in the resulting 65\% one of the players had an advantage.
+
+We consider this result to be positive as the games were generated without
+any human intervention and weren't altered before running the experiment.
+\todo{link na appendinx s instrukcema na pregenerovani experimentu}
+
+Considering that 35\% of the generated games are balanced, this would allow
+the algorithm to be used offline as is to aid design of game levels with
+some manual checking of the resulting games.
+
+If one were to design the encounter completely from scratch to be balanced,
+it would be very difficult given the number of variables that need to be
+optimized.
+
+- bud zminit ze by to slo delat online s nejaky additional checkem
+- nebo zlepsit fitness aby vyresila patologicke pripady z experimentu?

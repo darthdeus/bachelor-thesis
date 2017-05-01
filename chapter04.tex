@@ -1,32 +1,58 @@
-\chapter{Experiments}
+\chapter{Generating Encounters}
 
-To verify our implementation we conducted an experiment with N \todo{cislo}
-computer science students which each played 20 games and answered questions
-to measure the strength of our MCTS AI, the balance of the generated encounters,
-and the overall game difficulty.
+We approach generating encounters as a search based problems with two
+different approaches, Simulated Annealing and Evolution Strategies. (\todo{reference})
 
-\missingfigure{grafy}
+To make the search algorithms as general as possible, we serialize our
+internal game representation into a single vector of normalized floating
+point values (DNA). The algorithm then doesn't need to understand our game
+mechanics and restriction, and can be applied to different configurations of
+the game independently.
 
-The results show that most participants consider our MCTS AI to be strong
-enough to provide a challengem which is also proven by the 40\% winrate of
-the participants. \todo{aktualizovat cisla}
+To avoid balancing via specific attributes, one can simply remove them from
+the serialization/deserialization routines that transform the game setup into
+the DNA vector, without altering any of the logic for balancing encounters.
 
-Given the number of played games \todo{overit, ze jich mame dost} we can
-rule out the AI having a better setup in most of the scenarios. Based on the
-results, around 35\% \todo{aktualizovat cisla} of the games were balanced,
-which means in the resulting 65\% one of the players had an advantage.
+In the case of our experiments, we chose to stick with 2v2 games on a fixed map,
+where each mage has only two abilities. This was chosen both with respect to our
+questionnaire, and running time of the algorithms. Choosing a larger team setup or
+a bigger map (or many different maps) would be difficult for the participants,
+and would also take much longer to compute our experimental data.
 
-We consider this result to be positive as the games were generated without
-any human intervention and weren't altered before running the experiment.
-\todo{link na appendinx s instrukcema na pregenerovani experimentu}
+\missingfigure{mapa}
 
-Considering that 35\% of the generated games are balanced, this would allow
-the algorithm to be used offline as is to aid design of game levels with
-some manual checking of the resulting games.
+- popsat jak funguje reprezentace DNA
 
-If one were to design the encounter completely from scratch to be balanced,
-it would be very difficult given the number of variables that need to be
-optimized.
+\section{Simulated Annealing and Evolution Strategies}
 
-- bud zminit ze by to slo delat online s nejaky additional checkem
-- nebo zlepsit fitness aby vyresila patologicke pripady z experimentu?
+Our initial implementation of generating the encounters was using Simulated
+Annealing (\todo{reference}). However, we had difficulty converging to good
+results \todo{fuj, napsat jinak}.
+
+As a result, we ran an experiment to sample the search space at roughly 20 million
+different points, and measured the change in fitness in the neighbourhood of each point.
+We found that in each point's neighbourhood, there are roughly 5 times more points that have
+worse fitness than the ones that are an improvement over the current point. We also found that
+most of these downward changes were much steeper between 4-7x than the improving points.
+
+Our suspicion is that this is the main cause of failure of Simmulated Annealing, which simply
+fails to find the upward slope.
+
+For this reason we chose to try another approach, specificially Evolution Strategies (\todo{reference})
+
+\section{Choice of the Fitness Function}
+
+In order to evaluate the balance of a matchup, we came up with the following fitness function.
+
+\todo{chybi popis}
+
+During the experiment we encountered multiple ways ES tried to exploit the game
+mechanics to maximize the balance fitness function in ways that were
+undesirable. One example being when the resulting games end up being short as
+the algorithm generates mages with lots of AOE abilities that cover the whole
+map in the first turn, resulting in immediate death of all characters.
+
+We balance this by introducing an additional fitness function for game length
+in the form of a cumulative normal distribution with $\sigma = 10$ and $\mu =
+3$.\unsure{overit jestli to tak fakt je}.  This prevents ES from moving towards
+short games.

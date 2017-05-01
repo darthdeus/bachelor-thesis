@@ -1,106 +1,35 @@
-\chapter{Game AI}
+\chapter{Game Mechanics}
 
-In order to test our encounter balancing approach, we needed to develop an
-AI that can be used to evaluate match setups. Since our game is very
-positional and with complicated effects that can span multiple turns, we
-decided that manual evaluation of the game state would be difficult. As a
-result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS).
+\section{Motivation for a Custom Game}
 
-We present three different approaches and compare them in their strength,
-specifically a MCTS based AI, a \emph{Rule based AI}, and a \emph{Random
-AI}.
+- game that can generalize to real life scenarios
+- simple mechanics that are representative
+- fast to simulate
 
-Our assumption \todo{lepsi slovo?} is that MCTS can play reasonably well
-even against a human player, which is later tested in an experiment
-\todo{reference na chap5}. Next we built a \emph{Rule based AI} which picks
-its actions based on a fixed set of predefined rules. These are mostly
-designed for an aggressive-style gameplay in order to make simulated games
-shorter. Lastly, we present a \emph{Random AI} which makes uniform random
-choice of actions from a pool of generated actions.
+\section{Game Mechanics in Detail}
 
+Two teams fight on a hexagonal map (\emph{arena}) of small size (radius of
+5-10 hexes). Each team consists of a small number of player controller
+characters (\emph{mages} for short), and each mage has a small number of
+\emph{abilities}, \emph{health}, and \emph{action points}. Players take turns, during
+which each player has control over one of his mages. The player can issue
+commands to move around the arena and use abilities. Both movement and ability
+usage costs action points, which are restored at the end of the turn.  Moving
+one hex costs one action point. The cost of using an ability varies, and is one
+of the parameters that we optimize for when looking for a balanaced game. An
+ability can also have a \emph{cooldown}, which prevents repeated usage for a
+given number of turns \todo{turn}. Note that the cooldown can
+be zero, which means the ability can be used multiple times per turn
+\todo{turn}.
 
-\section{Implementation of MCTS and high level actions}
+\missingfigure{obrazek areny?}
 
-After some experimentation, we've settled down for three high level actions
-that represent most of what a player might want to do.
+Abilities can do direct damage to an enemy mage, apply a \emph{debuff} (causing
+damage and decreasing action points over time), and create an area of effect
+(\emph{AOE}) debuff that spans multiple hexes in the arena. Both the debuffs and
+AOEs are applied at the end of each turn \todo{rozlisovat turn maga a turn hry
+(round?)}, which happens after both players finish playing all their mages.
+Both debuffs and AOEs also have a lifetime, which specifies how many turns
+\todo{znova turn} the effect lasts.
 
-\begin{description}[align=right,labelwidth=3cm]
-\item [AbilityUse] Use an ability targeting an enemy that is already in range.
-\item [AttackMove] Move into the range of an enemy and use an ability.
-\item [DefensiveMove] Look for a place on the map that is not visible to the enemy and move there (to avoid damage).
-\end{description}
-
-Combined actions help significantly reduce the depth of the game tree. Most
-prominent is the fact that we don't allow arbitrary \emph{Move} actions, but
-only \emph{DefensiveMove}.
-
-
-\section{Playout}
-
-Given the number of possible actions at each turn, and the number of turns needed to finish
-the game, we decided that a random playout as is generally suggested with MCTS is not feasible.
-Even with a small set of precomputed actions, playing at random is still not good enough,
-as the game can be decided by a single bad move. Given a uniform action selection, most selected
-actions would not be representative of a good strategy.
-
-We thus chose to make our MCTS playout deterministic. The playout strategy
-is similar to that of our \emph{Rule based AI}, but is made simpler in order
-to avoid generating a heatmap on each turn. The strategy is as follows:
-
-\begin{itemize}[align=right,labelwidth=3cm]
-\item If there is an enemy in sight, use the best possible ability against him.
-\item If there is no enemy in sight, pick an enemy and move towards him.
-\end{itemize}
-
-Having an aggressive set of rules both makes the games shorter, and allows for faster
-generaiton of actions than that of our \emph{Rule based AI}, since we don't have to account
-for positional information.
-
-The main benefit of the playout strategy is measuring the effect of debuffs, AOEs and cooldowns,
-which unlike damage/health would be difficult to calculate in closed form given a state of the game.
-
-\missingfigure{pridat graf rychlosti iteraci DefaultPolicy vs RuleBasedAction()}
-
-
-\section{Rule based AI}
-
-To get a reasonable comparison between both MCTS and the \emph{Random AI} we built
-an aggresive \emph{Rule based AI}. The rule order is as follows:
-
-\begin{itemize}[align=right,labelwidth=3cm]
-\item If there is an enemy in sight, use the best possible ability against him.
-\item If there is no enemy in sight, but we have an ability that can be used, pick a target towards which we can move and use our ability.
-\item Otherwise, hide from enemy sight.
-\end{itemize}
-
-The structure of these rules is similar to the actions generated by MCTS,
-but there is no additional search or game-state evaluation. The rules are
-simply picked from top to bottom.
-
-We found that even with such a simple set of rules the AI can play reasonably
-well against a human opponent.
-
-
-\section{Random AI}
-
-In order to establish a baseline when evaluating our \emph{Rule based AI} and MCTS.
-The \emph{Random AI} uses the same mechanics as MCTS for generating possible actions,
-but choses among them randomly. This can be seen as taking a random walk down
-the MCTS search tree.
-
-The benefit of re-using the MCTS tree is that we get a reasonable benchmark against
-both the rule-based AI and MCTS. If we generated actions completely at random, the \emph{Random AI}
-would walk around the map without doing much of anything, as the number of \emph{Move} actions
-greatly outnumbers the \emph{AbilityUse} actions. To give a rough estimate, in a 2v2 game where
-each mage has 10 action points, there would be at most 2 \emph{AbilityUse} actions at each point
-in the game, but up to 100 \emph{Move} actions (considering a small map of radius $~5$).
-
-There are also certain limitations imposed on the choice of MCTS actions to allow for faster search,
-from which the \emph{Random AI} can benefit. For example, it is not allowed to use a \emph{Move}
-action twice in a row, as these could always be collapsed into a single \emph{Move} actions to the
-final target destination. This limitation alone reduces the search tree greatly.
-
-By making the \emph{Random AI} smarter, we can get a better estimate of just how better
-both the \emph{Rule based AI}. This should serve as a benchmark against a player who would
-pick actions mostly at random, while also putting at least some thought into not doing things
-that are completely pointless, such as moving from A to B and back from B to A in a single turn.
+\section{Simulator}
