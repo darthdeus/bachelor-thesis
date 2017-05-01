@@ -34,14 +34,39 @@ Combined actions help significantly reduce the depth of the game tree. Most
 prominent is the fact that we don't allow arbitrary \emph{Move} actions, but
 only \emph{DefensiveMove}.
 
+In an average setup we can expect each mage to have tens of possible
+\emph{Move} actions. Specifically, given our 2v2 setup on a 10-hex map there
+could up nearly up to a 100 move actions possible. Given the game mechanics, it
+is also completely valid to move from A to B and then from B to C, instead of
+moving directly from A to C. While this is something the player might want to
+utilize, it makes no sense to separate the \emph{Move} actions from the point
+of the AI\@.
+
+It also doesn't make any sense to execute a \emph{DefensiveMove} actions (with
+the goal to hide), and then try to do anything else. If we wanted to attack
+after moving, the action would be \emph{AttackMove}, and if we just wanted to
+move to a different position, we could always move there directly.
+
+The reason we chose to split \emph{AbilityUse} and \emph{AttackMove} is because one
+mage can use an ability multiple times per his turn. This creates a need for a raw
+\emph{AbilityUse} action. The \emph{AttackMove} action is also necessary since the enemy
+might be out of range.
+
+One thing we explicitly do not consider is moving towards an enemy without the intent
+of using an ability or hiding. A player could theoretically move into a position
+that is vulnerable, but at the same time not allowing him to use an ability afterwards.
+We made this decision based on the layout of our map \todo{fig reference} which should
+almost always allow the player to move forward while also hiding behind cover.
 
 \section{Playout}
 
-Given the number of possible actions at each turn, and the number of turns needed to finish
-the game, we decided that a random playout as is generally suggested with MCTS is not feasible.
-Even with a small set of precomputed actions, playing at random is still not good enough,
-as the game can be decided by a single bad move. Given a uniform action selection, most selected
-actions would not be representative of a good strategy.
+Given the number of possible actions at each turn, and the number of turns
+needed to finish the game, we decided that a random playout as is generally
+suggested with MCTS is not feasible \todo{reference na uniformni akce}.  Even
+with a small set of precomputed actions, playing at random is still not good
+enough, as the game can be decided by a single bad move. Given a uniform action
+selection, most selected actions would not be representative of a good
+strategy.
 
 We thus chose to make our MCTS playout deterministic. The playout strategy
 is similar to that of our \emph{Rule based AI}, but is made simpler in order
@@ -59,13 +84,14 @@ for positional information.
 The main benefit of the playout strategy is measuring the effect of debuffs, AOEs and cooldowns,
 which unlike damage/health would be difficult to calculate in closed form given a state of the game.
 
-\missingfigure{pridat graf rychlosti iteraci DefaultPolicy vs RuleBasedAction()}
-
+\missingfigure{pridat graf rychlosti iteraci DefaultPolicy vs RuleBasedAction}
 
 \section{Rule based AI}
 
-To get a reasonable comparison between both MCTS and the \emph{Random AI} we built
-an aggresive \emph{Rule based AI}. The rule order is as follows:
+To get a reasonable comparison between both MCTS and the \emph{Random AI} we
+built an aggresive \emph{Rule based AI}, which does not simulate the playout in
+any way, and only does simple analysis of the board state before choosing what
+to do. The rule order is as follows:
 
 \begin{itemize}[align=right,labelwidth=3cm]
 \item If there is an enemy in sight, use the best possible ability against him.
@@ -83,13 +109,13 @@ well against a human opponent.
 
 \section{Random AI}
 
-In order to establish a baseline when evaluating our \emph{Rule based AI} and MCTS.
+In order to establish a baseline when evaluating our \emph{Rule based AI} and MCTS\@.
 The \emph{Random AI} uses the same mechanics as MCTS for generating possible actions,
 but choses among them randomly. This can be seen as taking a random walk down
 the MCTS search tree.
 
 The benefit of re-using the MCTS tree is that we get a reasonable benchmark against
-both the rule-based AI and MCTS. If we generated actions completely at random, the \emph{Random AI}
+both the rule-based AI and MCTS\@. If we generated actions completely at random, the \emph{Random AI}
 would walk around the map without doing much of anything, as the number of \emph{Move} actions
 greatly outnumbers the \emph{AbilityUse} actions. To give a rough estimate, in a 2v2 game where
 each mage has 10 action points, there would be at most 2 \emph{AbilityUse} actions at each point
