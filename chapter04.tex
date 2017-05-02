@@ -21,7 +21,7 @@ and would also take much longer to compute our experimental data.
 
 \missingfigure{mapa}
 
-- popsat jak funguje reprezentace DNA
+\todo{popsat jak funguje reprezentace DNA?}
 
 \section{Simulated Annealing and Evolution Strategies}
 
@@ -47,17 +47,24 @@ consistently converge much faster than simulated annealing.
 
 \section{Choice of the Fitness Function}
 
-In order to evaluate the balance of a matchup, we came up with the following fitness function.
+In order to evaluate the balance of a matchup, we evaluated the following three criteria:
 
-\todo{chybi popis}
+\begin{description}[align=right,labelwidth=3cm]
+\item [Balance] Unsurprisingly, part of the fitness function is comparing the strength of both teams against each other.
+\item [Game length] We also put an interval restriction on game length.
+\item [Team difference] Lastly, since we don't to create balance by making both teams identical, we added a third criteria
+that measures the difference of both teams.
+\end{description}
 
-During the experiment we encountered multiple ways ES tried to exploit the game
-mechanics to maximize the balance fitness function in ways that were
-undesirable. One example being when the resulting games end up being short as
-the algorithm generates mages with lots of AOE abilities that cover the whole
-map in the first turn, resulting in immediate death of all characters.
+During the experiment we encountered multiple ways ES tried to exploit the
+game mechanics to maximize the balance fitness function in ways that were
+undesirable. One example being when the resulting games end up being short
+as the algorithm generates mages with lots of AOE abilities that cover the
+whole map in the first turn, resulting in immediate death of all characters.
 
 We balance this by introducing an additional fitness function for game length
-in the form of a cumulative normal distribution with $\sigma = 10$ and $\mu =
-3$.\unsure{overit jestli to tak fakt je}.  This prevents ES from moving towards
-short games.
+in the form of a cumulative normal distribution with mean around $10$ turns.
+
+Lastly, the team difference is measured as an euclidean distance between the DNA
+vectors of each team. Again, we use a cumulative normal distribution to put a lower
+bound on the team difference.
