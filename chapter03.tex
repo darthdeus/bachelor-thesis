@@ -23,7 +23,7 @@ choice of actions from a pool of generated actions.
 After some experimentation, we've settled down for three high level actions
 that represent most of what a player might want to do.
 
-\begin{description}[align=right,labelwidth=3cm]
+\begin{description}
 \item [AbilityUse] Use an ability targeting an enemy that is already in range.
 \item [AttackMove] Move into the range of an enemy and use an ability.
 \item [DefensiveMove] Look for a place on the map that is not visible to the enemy and move there (to avoid damage).
@@ -71,7 +71,7 @@ We thus chose to make our MCTS playout deterministic. The playout strategy
 is similar to that of our \emph{Rule based AI}, but is made simpler in order
 to avoid generating a heatmap on each turn. The strategy is as follows:
 
-\begin{itemize}[align=right,labelwidth=3cm]
+\begin{itemize}
 \item If there is an enemy in sight, use the best possible ability against him.
 \item If there is no enemy in sight, pick an enemy and move towards him.
 \end{itemize}
@@ -92,7 +92,7 @@ built an aggresive \emph{Rule based AI}, which does not simulate the playout in
 any way, and only does simple analysis of the board state before choosing what
 to do. The rule order is as follows:
 
-\begin{itemize}[align=right,labelwidth=3cm]
+\begin{itemize}
 \item If there is an enemy in sight, use the best possible ability against him.
 \item If there is no enemy in sight, but we have an ability that can be used, pick a target towards which we can move and use our ability.
 \item Otherwise, hide from enemy sight.

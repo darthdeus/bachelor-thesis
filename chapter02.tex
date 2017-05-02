@@ -5,7 +5,7 @@ still wanted our game to be general enough so that a wide variety of
 playstyles can be represented within the game rules.
 
 Two teams fight on a hexagonal map (\emph{arena}) of small size (radius of
-5-10 hexes). Each team consists of a small number of player controller
+5--10 hexes). Each team consists of a small number of player controller
 characters (\emph{mages} for short), and each mage has a small number of
 \emph{abilities}, \emph{health}, and \emph{action points}. Players take turns, during
 which each player has control over one of his mages. The player can issue
@@ -41,7 +41,7 @@ player to move out of position.
 Our game is represented as a single \emph{state} object onto which \emph{actions} can be applied
 to transition to the next state. The possible actions are:
 
-\begin{description}[align=right,labelwidth=3cm]
+\begin{description}
 \item [AbilityUse] Use an ability targeting an enemy that is already in range.
 \item [Move] Move the current mage to a different hex on the map.
 \item [EndTurn] Finish the current turn.
@@ -49,7 +49,7 @@ to transition to the next state. The possible actions are:
 
 There are also a few special action types that:
 
-\begin{description}[align=right,labelwidth=3cm]
+\begin{description}
 \item [DefensiveMove] Serves the same purpose as \emph{Move}, but carries an
 additional information in the sense that \emph{DefensiveMove} can only be
 the last action of the turn.
