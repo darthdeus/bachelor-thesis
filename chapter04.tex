@@ -1,7 +1,8 @@
 \chapter{Generating Encounters}
 
-We approach generating encounters as a search based problems with two
-different approaches, Simulated Annealing and Evolution Strategies. (\todo{reference})
+We approach generating encounters as a search based problems with two different
+approaches, Simulated Annealing \citep{ai-modern} and Evolution Strategies
+\citep{evolution-strategies}.
 
 To make the search algorithms as general as possible, we serialize our
 internal game representation into a single vector of normalized floating
@@ -26,8 +27,8 @@ and would also take much longer to compute our experimental data.
 \section{Simulated Annealing and Evolution Strategies}
 
 Our initial implementation of generating the encounters was using Simulated
-Annealing (\todo{reference}). However, we had difficulty converging to good
-results \todo{fuj, napsat jinak}.
+Annealing. However, we had difficulty converging to good results \todo{fuj,
+napsat jinak}.
 
 As a result, we ran an experiment to sample the search space at roughly 20
 million different points, and measured the change in fitness in the
@@ -39,15 +40,16 @@ points. Our suspicion is that this is the main cause of failure of
 Simmulated Annealing, which simply fails to find the upward slope.
 
 For this reason we chose to try another approach, specificially Evolution
-Strategies (\todo{reference}). In short, we take the initial DNA vector,
-generate around 50 neighbours in the search space, evaluate their fitness
-and take their weighted sum as the new current DNA\@. This process is iterated
-until a DNA with suitable fitness is found. We have found this approach to
-consistently converge much faster than simulated annealing.
+Strategies. In short, we take the initial DNA vector, generate around 50
+neighbours in the search space, evaluate their fitness and take their weighted
+sum as the new current DNA\@. This process is iterated until a DNA with
+suitable fitness is found. We have found this approach to consistently converge
+much faster than simulated annealing.
 
 \section{Choice of the Fitness Function}
 
-In order to evaluate the balance of a matchup, we evaluated the following three criteria:
+In order to evaluate the balance of a matchup, we evaluated the following three
+criteria:
 
 \begin{description}
 \item [Balance] Unsurprisingly, part of the fitness function is comparing the strength of both teams against each other.
