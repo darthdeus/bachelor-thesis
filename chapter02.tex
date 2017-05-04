@@ -1,10 +1,6 @@
 \chapter{Game Rules and Mechanics}
 \label{chapter02}
 
-For the purposes of this thesis we'll only stick to turn-based gameplay. We
-still wanted our game to be general enough so that a wide variety of
-playstyles can be represented within the game rules.
-
 Two teams fight on a hexagonal map (\emph{arena}) of small size (radius of
 5--10 hexes, see \hyperref[fig:arena]{Figure 2.1}). Each team consists of a small number of player controller
 characters (\emph{mages} for short), and each mage has a small number of
@@ -16,7 +12,8 @@ one hex costs one action point. The cost of using an ability varies, and is one
 of the parameters that we optimize for when looking for a balanaced game. An
 ability can also have a \emph{cooldown}, which prevents repeated usage for a
 given number of rounds. Note that the cooldown can be zero, which means the
-ability can be used multiple times per turn
+ability can be used multiple times per turn. Abilities also have limited range,
+which supports positional gameplay.
 
 Abilities can do direct damage to an enemy mage, apply a \emph{debuff} (causing
 damage and decreasing action points over time), and create an area of effect
@@ -59,9 +56,9 @@ list of invariant checks. These are automatically turned off in a release build
 to make the simulator run as fast as possible.
 
 The simulator is also built to be high performance and can easily run hundreds
-of thousands to millions of actions per second on a consumer-grade PC. 
+of thousands to millions of actions per second on a consumer-grade PC\@.
 The state object is split into two parts, one that handles the
-general immutable information that doesn't change as the game progresses (i.e.
+general immutable information that doesn't change as the game progresses (i.e.\
 max hitpoints, ability definitions, etc.), and one that handles all of the
 mutable data, such as current hitpoints, current positions on the map, etc.
 This allowed us to make state copies very fast as well, running only at a few

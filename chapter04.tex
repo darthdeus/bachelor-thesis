@@ -1,6 +1,12 @@
 \chapter{Generating Encounters}
 \label{chapter04}
 
+\section{Reducing the Scope of the Problem}
+
+\todo{popsat}
+
+\section{Approach}
+
 We approach generating encounters as a search based problems with two different
 approaches, Simulated Annealing \citep{ai-modern} and Evolution Strategies
 \citep{evolution-strategies}.
@@ -53,10 +59,16 @@ In order to evaluate the balance of a matchup, we evaluated the following three
 criteria:
 
 \begin{description}
-\item [Balance] Unsurprisingly, part of the fitness function is comparing the strength of both teams against each other.
-\item [Game length] We also put an interval restriction on game length.
-\item [Team difference] Lastly, since we don't to create balance by making both teams identical, we added a third criteria
-that measures the difference of both teams.
+\item [Balance] Unsurprisingly, part of the fitness function is comparing the
+  strength of both teams against each other.  We consider games that end in a
+    draw balanced.  If the game doesn't end in a draw, we measure the remaining
+    HP percentage of the winner, and the lower it is, the more balanced the
+    game was.
+\item [Game length] We also put an interval restriction on game length. Ideally
+  we'd want the game to last at least 2 rounds.
+\item [Team difference] Lastly, since we don't to create balance by making both
+  teams identical, we added a third criteria that measures the difference of
+    both teams.
 \end{description}
 
 The combined fitness function is calculated as the average of the three. See \hyperref[fig:converging-es]{Figure 4.1} for an example

@@ -11,6 +11,9 @@ $50^{5*4} \approx 10^{30}$ possible states (50 actions per round, 5 rounds, 4 ma
 This means a minimax approach is unfeasible as it is impossible to search the whole
 game tree. As a result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS).
 
+\todo{popsat mcts}
+\todo{popsat asymc tree growth}
+
 Our hypothesis is that MCTS can play reasonably well even against a human player,
 which is later tested in an experiment (see \hyperref[chapter05]{Chapter 5}).
 Next we built a \emph{Rule based AI} which picks
@@ -20,8 +23,7 @@ shorter. Lastly, we present a \emph{Random AI} which makes uniform random
 choice of actions from a pool of generated actions.
 
 We present three different approaches and compare them in their strength,
-specifically a MCTS based AI, a \emph{Rule based AI}, and a \emph{Random
-	AI}.
+specifically a MCTS based AI, a \emph{Rule based AI}, and a \emph{Random AI}.
 
 \section{Implementation of MCTS and high level actions}
 
@@ -38,14 +40,16 @@ Combined actions help significantly reduce the depth of the game tree (see \hype
 prominent is the fact that we don't allow arbitrary \emph{Move} actions, but
 only \emph{DefensiveMove}.
 
-
 \begin{figure}
 	\centering
 	\includegraphics[width=0.75\textwidth]{img/game-tree.png}
-	\caption{An exmple of a MCTS game tree after 100 iterations. Each node contains (from top to bottom) a node identifier, currently active team, cumulated reward / total number of visits, and the action type. The nodes are also colored based on the team color. The actions are shown in shortcuts to reduce tree width (AM - AttackMove, D - DefensiveMove, End - End Turn, NullAction - empty action representing the root node).}
-	\label{fig:gametree}	
+  \caption{An exmple of a MCTS game tree after 100 iterations. Each node
+contains (from top to bottom) a node identifier, currently active team,
+cumulated reward / total number of visits, and the action type. The nodes are
+also colored based on the team color. The actions are shown in shortcuts to
+reduce tree width (AM - AttackMove, D - DefensiveMove, End - End Turn,
+NullAction - empty action representing the root node).}\label{fig:gametree}
 \end{figure}
-
 
 In an average setup we can expect each mage to have tens of possible
 \emph{Move} actions. Specifically, given our 2v2 setup on a 10-hex map there
