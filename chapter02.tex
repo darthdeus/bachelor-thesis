@@ -29,10 +29,8 @@ The motivation for having cooldowns is that it allows us to generate powerful
 abilities that don't necessarily take up the whole turn of the player by costing
 a lot of action points. If the ability is cheap, but has a large cooldown, it can
 serve a strategic purpose, as the player might want to prepare his position in order
-to use the ability when the cooldown wears off.
-
-AOE abilities also improve positional gameplay, as they can be used to force the enemy
-player to move out of position.
+to use the ability when the cooldown wears off. AOE abilities also improve positional
+gameplay, as they can be used to force the enemy player to move out of position.
 
 \missingfigure{obrazek areny?}
 
@@ -43,8 +41,9 @@ game rules and mechanics. This is then used by both the AI and the PCG algorithm
 be run separately from the main game. The game is internally represented by a \emph{state} object,
 and all of the possible player actions are encapsulated by an \emph{action} object.
 Playing the game through the library then simply becomes a matter of applying a state transition
-function $f: (\text{state}, \text{action}) \rightarrow \text{state}$. The simulator also verifies that no invalid actions are applied through a thorough list of invariant
-checks. These are automatically turned off in a release build to make the simulator run as fast as possible.
+function $f: (\text{state}, \text{action}) \rightarrow \text{state}$. The simulator also verifies
+that no invalid actions are applied through a thorough list of invariant checks. These are automatically
+turned off in a release build to make the simulator run as fast as possible.
 
 The simulator is also built to be high performance and can easily run hundreds of thousands to millions
 of actions per second on a consumer-grade PC \todo{graf?}. The state object is split into two parts,
