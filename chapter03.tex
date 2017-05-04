@@ -14,10 +14,10 @@ game tree. As a result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS).
 \todo{popsat mcts}
 \todo{popsat asymc tree growth}
 
-Our hypothesis is that MCTS can play reasonably well even against a human player,
-which is later tested in an experiment (see \hyperref[chapter05]{Chapter 5}).
-Next we built a \emph{Rule based AI} which picks
-its actions based on a fixed set of predefined rules. These are mostly
+Our hypothesis is that MCTS can play reasonably well even against a human
+player, which is later tested in an experiment (see
+\hyperref[chapter05]{Chapter 5}).  Next we built a \emph{Rule based AI} which
+picks its actions based on a fixed set of predefined rules. These are mostly
 designed for an aggressive-style gameplay in order to make simulated games
 shorter. Lastly, we present a \emph{Random AI} which makes uniform random
 choice of actions from a pool of generated actions.
@@ -42,7 +42,7 @@ only \emph{DefensiveMove}.
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.75\textwidth]{img/game-tree.png}
+	\includegraphics[width=0.95\textwidth]{img/game-tree.png}
   \caption{An exmple of a MCTS game tree after 100 iterations. Each node
 contains (from top to bottom) a node identifier, currently active team,
 cumulated reward / total number of visits, and the action type. The nodes are
