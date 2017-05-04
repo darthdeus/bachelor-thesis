@@ -8,13 +8,27 @@ but it is difficult to make sure the game stays balanced as the new content
 is added over time. This is generally done by human play-testing \todo{reference}
 in-house before the game updates are released, and takes large amounts of time.
 
-This thesis aims to solve the problem with PCG. We introduce a custom
-game similar to Duelyst, etc., and show that search based PCG can create
-new content that is balanced.
+This thesis aims to solve the problem with \emph{procedural content generation} (PCG).
+We define PCG as \emph{the algorithmic creation of game content with little or no user input}
+\citep{pcgbook} We introduce a custom game similar to Duelyst \citet{duelyst}, and show that
+search based PCG can create new content that is balanced.
 
 \section{Game types}
 
+We narrow our scope to turn-based games, since simultaneous move games provide
+an additional challenge when building an AI, which for us is just a means to help
+with PCG.
+
 \section{Types of PCG currently being used}
+
+Many games utilize different kinds of PCG these days. Large comercial games such as Diablo \citep{diablo}
+use PCG to generate unique map layout of certain areas. Some games like the popular Minecraft \citep{minecraft}
+go to an extreme and procedurally generate the whole world. But PCG is not only limited to large games,
+even small indie games like Spelunky \citep{spelunky} or Terraria \citep{spelunky} utilize PCG for generating
+playable levels.
+
+Games also use PCG for item creation, where the specific attributes of an item are generated
+online (e.g. Borderlands \citet{borderlands}).
 
 \section{Thesis Goals}
 
