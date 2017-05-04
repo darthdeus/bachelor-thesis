@@ -67,13 +67,11 @@ almost always allow the player to move forward while also hiding behind cover.
 
 Given the number of possible actions at each turn, and the number of turns
 needed to finish the game, we decided that a random playout as is generally
-suggested with MCTS is not feasible \todo{reference na uniformni akce}.  Even
-with a small set of precomputed actions, playing at random is still not good
-enough, as the game can be decided by a single bad move. Given a uniform action
-selection, most selected actions would not be representative of a good
-strategy.
+suggested with MCTS is not feasible (see \citet{mcts-survey}). The games
+are usually short (between 2--5 rounds), which means a single bad action can decide
+the whole game. A uniform action selection would not yield a representative playout.
 
-We thus chose to make our MCTS playout deterministic. The playout strategy
+We thus chose to make our MCTS playout deterministic. The strategy
 is similar to that of our \emph{Rule based AI}, but is made simpler in order
 to avoid generating a heatmap on each turn. The strategy is as follows:
 
