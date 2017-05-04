@@ -1,22 +1,28 @@
 \chapter{Game AI}
+\label{chapter03}
 
 In order to test our encounter balancing approach, we needed to develop an
 AI that can be used to evaluate match setups. Since our game is very
 positional and with complicated effects that can span multiple turns, we
-decided that manual evaluation of the game state would be difficult. As a
-result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS).
+decided that manual evaluation of the game state would be difficult. There
+is also a large amount of actions possible at each turn, and a game is expected
+to last anywhere from 2 to 5 rounds. Given a 2v2 setup, this would yield
+$50^{5*4} \approx 10^{30}$ possible states (50 actions per round, 5 rounds, 4 mages).
+This means a minimax approach is unfeasible as it is impossible to search the whole
+game tree. As a result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS).
 
-We present three different approaches and compare them in their strength,
-specifically a MCTS based AI, a \emph{Rule based AI}, and a \emph{Random
-AI}.
-
-Our assumption \todo{lepsi slovo?} is that MCTS can play reasonably well
-even against a human player, which is later tested in an experiment
-\todo{reference na chap5}. Next we built a \emph{Rule based AI} which picks
+Our hypothesis is that MCTS can play reasonably well even against a human player,
+which is later tested in an experiment (see \hyperref[chapter05]{Chapter 5}).
+Next we built a \emph{Rule based AI} which picks
 its actions based on a fixed set of predefined rules. These are mostly
 designed for an aggressive-style gameplay in order to make simulated games
 shorter. Lastly, we present a \emph{Random AI} which makes uniform random
 choice of actions from a pool of generated actions.
+
+
+We present three different approaches and compare them in their strength,
+specifically a MCTS based AI, a \emph{Rule based AI}, and a \emph{Random
+	AI}.
 
 \section{Implementation of MCTS and high level actions}
 

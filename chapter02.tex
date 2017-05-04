@@ -1,4 +1,5 @@
 \chapter{Game Rules and Mechanics}
+\label{chapter02}|
 
 For the purposes of this thesis we'll only stick to turn-based gameplay. We
 still wanted our game to be general enough so that a wide variety of
@@ -14,16 +15,20 @@ usage costs action points, which are restored at the end of the turn.  Moving
 one hex costs one action point. The cost of using an ability varies, and is one
 of the parameters that we optimize for when looking for a balanaced game. An
 ability can also have a \emph{cooldown}, which prevents repeated usage for a
-given number of turns \todo{turn}. Note that the cooldown can
-be zero, which means the ability can be used multiple times per turn
+given number of rounds. Note that the cooldown can be zero, which means the
+ability can be used multiple times per turn
 
 Abilities can do direct damage to an enemy mage, apply a \emph{debuff} (causing
 damage and decreasing action points over time), and create an area of effect
 (\emph{AOE}) debuff that spans multiple hexes in the arena. Both the debuffs and
-AOEs are applied at the end of each turn \todo{rozlisovat turn maga a turn hry
-(round?)}, which happens after both players finish playing all their mages.
-Both debuffs and AOEs also have a lifetime, which specifies how many turns
-\todo{znova turn} the effect lasts.
+AOEs are applied at the end of each round. Both debuffs and AOEs also have a lifetime,
+which specifies how many rounds the effect lasts.
+
+There is also an important distinction between a \emph{turn} and a \emph{round}.
+A turn means playing all the actions a single mage can do with his action points,
+and ends when the player decides he is finished playing with that one single character.
+A round ends when all of the characters have played their turn, and it is at that point
+when debuffs, AOEs, cooldowns and action points are re-calculated (see below).
 
 The motivation for having cooldowns is that it allows us to generate powerful
 abilities that don't necessarily take up the whole turn of the player by costing
@@ -48,13 +53,15 @@ list of invariant checks. These are automatically turned off in a release build
 to make the simulator run as fast as possible.
 
 The simulator is also built to be high performance and can easily run hundreds
-of thousands to millions of actions per second on a consumer-grade PC
-\todo{graf?}. The state object is split into two parts, one that handles the
+of thousands to millions of actions per second on a consumer-grade PC. 
+The state object is split into two parts, one that handles the
 general immutable information that doesn't change as the game progresses (i.e.
 max hitpoints, ability definitions, etc.), and one that handles all of the
 mutable data, such as current hitpoints, current positions on the map, etc.
 This allowed us to make state copies very fast as well, running only at a few
-microseconds per copy \todo{graf?}.
+microseconds per copy.
+
+\missingfigure{graf}
 
 \subsection{Actions}
 The possible actions are:
