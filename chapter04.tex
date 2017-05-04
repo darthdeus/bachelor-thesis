@@ -21,9 +21,9 @@ questionnaire, and running time of the algorithms. Choosing a larger team setup 
 a bigger map (or many different maps) would be difficult for the participants,
 and would also take much longer to compute our experimental data.
 
-\missingfigure{mapa}
-
-\todo{popsat jak funguje reprezentace DNA?}
+Taking these restrictions into mind, the DNA would then take up $96$ floating point values,
+specifically: $$2 \text{ Teams} \times 2 \text{ Mages} \times ( HP + AP + \text{ AbilitySize})$$ where $\text{Ability Size} = 11$ since we need to serialize damage, cost, range, cooldown,
+debuff (HP damage, AP damage, lifetime), and AOE (debuff + lifetime).
 
 \section{Simulated Annealing and Evolution Strategies}
 
@@ -58,6 +58,18 @@ criteria:
 \item [Team difference] Lastly, since we don't to create balance by making both teams identical, we added a third criteria
 that measures the difference of both teams.
 \end{description}
+
+The combined fitness function is calculated as the average of the three. See \hyperref[fig:converging-es]{Figure 4.1} for an example
+plot of how the fitness function converges using Evolution Strategies.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.75\textwidth]{img/converging-es.png}
+	\caption{An exmple of a how the combined fitness function converges over rougly 1200 iterations. Green dots represent the \emph{Balance} fitness measuring HP percentage left at the end of the game, blue dots represent game length, and purple is the combined fitness. We're not showing team difference data points as in this plot.}
+	\label{fig:converging-es}	
+\end{figure}
+
+\todo{tady neco chybi, prijde mi, ze to nenavazuje}
 
 During the experiment we encountered multiple ways ES tried to exploit the
 game mechanics to maximize the balance fitness function in ways that were
