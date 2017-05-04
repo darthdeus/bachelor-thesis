@@ -1,8 +1,32 @@
 \chapter{Problem Definition}
 
+Tactical turn-based games like Duelyst and Faeria \todo{reference link}
+have become very popular in the recent years.
+
+More content can easily be added to the game (new spells, monsters, etc.),
+but it is difficult to make sure the game stays balanced as the new content
+is added over time. This is generally done by human play-testing \todo{reference}
+in-house before the game updates are released, and takes large amounts of time.
+
+This thesis aims to solve the problem with PCG. We introduce a custom
+game similar to Duelyst, etc., and show that search based PCG can create
+new content that is balanced.
+
 \section{Game types}
 
 \section{Types of PCG currently being used}
+
+\section{Thesis Goals}
+
+Our main goal for this thesis is to generate balanced encounters. For this, we decided
+to implement a custom game with flexible game mechanics so that there are many different
+ways to create a balanced encounter. The game is turn-based, zero-sum, with perfect information.
+\todo{see chap2 for mechanics}
+
+We implement the game both in the form of a simulator that can be used as a library,
+and a GUI that a human player can use to play the game and test it. We also implement
+an AI for the game so that we can automatically evaluate and test games in our PCG algorithm.
+
 
 cite \cite{Genberget08}
 
