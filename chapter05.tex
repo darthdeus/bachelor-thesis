@@ -1,9 +1,32 @@
 \chapter{Experiments}
 
-To verify our implementation we conducted an experiment with N \todo{cislo}
-computer science students which each played 20 games and answered questions
-to measure the strength of our MCTS AI, the balance of the generated encounters,
-and the overall game difficulty.
+\subsection{Participants}
+
+The participants were all computer science students. All of them had at least
+some experience with computer games, and were presented the mechanics of HexMage
+before conducting the experiment.
+
+\subsection{Experiment Design}
+
+The goal of the experiment is to measure two things. One, if the generated
+encounters are actually balanced. And two, if the AI is strong enough to pose a
+challenge to the player. We will measure the overall winrate of the players,
+and also compare how the AI did in games the player considered balanced.
+
+The experiment consists of 20 different games of HexMage. All of the games are
+played on the same map that was hand-designed beforehand. This was to allow the
+participants to better get familiar with the game and think ahead. The games
+are structured so that each player has 2 mages, each with 2 abilities. This was
+to reduce the cognitive overhead for the participants and allow them to more easily
+adjust to the 20 completely different scenarios.
+
+The first 10 of the 20 games had the player team hand designed, and the
+opponent (played by the AI) generated with our PCG algorithm. The remaining 10
+games had both teams generated with no manual tweaks or changes. Having some of
+the games hand designed allows us to show that the PCG algorithm can balance
+against constraints that aren't completely random. A hand designed team might
+have features that are rare in the search space. All of the games are played
+against the MCTS based AI\@.
 
 \missingfigure{grafy}
 
