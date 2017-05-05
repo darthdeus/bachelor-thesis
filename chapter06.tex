@@ -1,10 +1,18 @@
-\chapter{Conclusion and discussion of the results}
+\chapter{Conclusion}
 \label{chapter06}
+
+We have designed and developed a working game with a simulator, developed multiple
+AI bots, built an algorithm for generating balanced encounters and tested everything
+in a number of experiments.
 
 Our experimental findings confirm that search based procedural generation
 is a viable solution for balancing encounters. While we didn't achieve perfect
-accuracy in generating the balanced encounters.
+accuracy in generating balanced results, our participants considered around $60\%$
+of the games to be balanced. This is confirmed by our win rate results, where $75\%$
+of the games were not completely won/lost by the players. After manually checking the remaining
+$25\%$ we found that one of the games was actually possible to win, which would raise the accuracy
+to $80\%$.
 
-We also showed that MCTS can perform well against human players. The majority
-of the players in our experiment consdered the MCTS based AI to play smart
-and the game to be overall difficult to win.
+Our MCTS AI also showed to be working very well, as it decisively defeated both the Random, and the Rule based AI.
+It also did well against the human players in the experiment, reaching $62\%$ winrate, and having around $75\%$ of the
+games be voted as \emph{smart} and \emph{challenging} by the participants.

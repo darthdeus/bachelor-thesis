@@ -33,8 +33,6 @@ From this we conclude that:
 	\item Thinking ahead (as MCTS does) provides enough value to be significant in terms of win rate.
 \end{enumerate}
 
-\missingfigure{vysledky jiny nez experiment}
-
 \section{Participants}
 
 The participants were all computer science students. All of them had at least
@@ -76,7 +74,7 @@ The questions were the following, answered on scale (1 - definitely no, to 7 - d
 	\item[Strategy:] The AI showed strategic thinking.
 \end{description}
 
-\section{Results}
+\section{Discussion of the Results}
 
 As we can see in \autoref{tab:balance-corr}, the questions for balance strongly correlate.
 
@@ -157,25 +155,24 @@ is a formidable opponent. \autoref{tab:means} show the mean of the other respons
 
 Looking further at the results, in $4$ out of the $20$ games the players lost $100\%$ of the time,
 and in $1$ out of the $20$ games the players won $100\%$ of the time. In the resulting $15$ games
-there were both cases when a player won and when a player lost.
+there were both cases when a player won and when a player lost. We re-evaluated those games manually 
+and found that in one case the game trully could not have been won, as one of the player mages always
+got killed too early on and did not get to do any damage. On the other hand, the second game we tried
+we won rather decisively, even though all of the participants in the experiment lost. The strategy to winning
+strategy was however to play very defensively and calculate the opponents AP,
+which is something the participants probably did not have a chance to do.
 
-Given the number of played games, we can
-rule out the AI having a better setup in most of the scenarios. Based on the
-results, around $60\%$  of the games were balanced,
-which means in the resulting $40\%$ one of the players had an advantage.
-We consider this result to be positive as the games were generated without
-any human intervention and weren't altered before running the experiment.
+As for the third game, we also confirm it as impossible to win, as the opponent had a cheap ability and powerful ability
+and could easily stay out of range while doing damage. The last of the always-lost games was also similar
+in the sense that the opponent had a cheap ability he could use over and over again, and once he got a small
+advantage he could push through to win the game without any resistance. While the games were close in terms
+of HP at the end, there was no clear way to win.
 
-Considering that $60\%$ of the generated games are balanced, this would allow
-the algorithm to be used offline as is to aid design of game levels with
-some manual checking of the resulting games. If one were to design the encounter
-completely from scratch to be balanced, it would be very difficult given the number
-of variables that need to be optimized.
+In light of these results, there is a possibility for future work by incorporating an additional fitness
+metric that makes sure the player can win the game, and not just that the games end up being close. However,
+considering the players voted on $60\%$ of the games as balanced, we have definitely met our goal of
+generating balanced encounters.
 
-\section{TODO}
-
-\begin{description}[align=right,labelwidth=3cm]
-\item bud zminit ze by to slo delat online s nejaky additional checkem
-\item nebo zlepsit fitness aby vyresila patologicke pripady z experimentu?
-\end{description}
-
+Note that all of the 20 games were generated without any human intervention, and the only input from the user
+was to set the constants for attributes' range. The whole process of generating a balanced encounter is completely
+automatic and replicable.
