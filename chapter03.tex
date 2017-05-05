@@ -11,19 +11,41 @@ $50^{5*4} \approx 10^{30}$ possible states (50 actions per round, 5 rounds, 4 ma
 This means a minimax approach is unfeasible as it is impossible to search the whole
 game tree. As a result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS).
 
-\todo{popsat mcts}
-\todo{popsat asymc tree growth}
-
-Our hypothesis is that MCTS can play reasonably well even against a human
-player, which is later tested in an experiment (see
-\hyperref[chapter05]{Chapter 5}).  Next we built a \emph{Rule based AI} which
-picks its actions based on a fixed set of predefined rules. These are mostly
-designed for an aggressive-style gameplay in order to make simulated games
-shorter. Lastly, we present a \emph{Random AI} which makes uniform random
-choice of actions from a pool of generated actions.
 
 We present three different approaches and compare them in their strength,
 specifically a MCTS based AI, a \emph{Rule based AI}, and a \emph{Random AI}.
+
+\section{Monte-Carlo Tree Search}
+
+Monte-Carlo tree search is a heuristic search algorithm that focuses its search on the most
+promising nodes in the game tree. States are evaluated based on the result of a \emph{playout}, which
+means picking actions based on a policy until a terminal state is reached, at which point it can be easily
+evaluated. The policy can be for example uniform sampling of the possible actions. The result
+of the playout is then used to re-calculate rewards for all the parent nodes up the game tree. For a detailed explanation
+of the algorithm, see \citet{mcts-survey}.
+
+The MCTS tree consists of nodes which represent game states. Each node keeps two values: the number $N$ of times
+it has been visited by MCTS, and the total cumulated reward $Q$ based on simulations. Overall, the algorithm consists of four steps:
+
+\begin{description}
+	\item[Selection] Start from the root $R$ and chose the most promising child node until a leaf node $N$ is reached.
+	\item[Expansion] If $N$ is not a terminal node, add a new child state to $N$.
+	\item[Simulation/Playout] Play the game to finish according to a default policy.
+	\item[Backpropagation] Calculate the reward terminal state of the default policy, then update reward/visited counts on the path from $N$ to $R$.
+\end{description}
+
+There are many variants of MCTS, and the one we chose is UCT (\emph{Upper Confidence Bound for Trees}). It uses the Upper-Confidence Bound (UCB) formula to balance \emph{exploration} and \emph{exploitation} of the game tree. Exploration is the tendency
+to choose nodes with the highest reward, and explitation is choosing nodes that have been visited in only a few simulations.
+
+\begin{equation}
+	\text{UCB} = \frac{Q}{N} + C \cdot \sqrt{\frac{\ln ParentN}{N}}	
+\end{equation}
+
+$C$ is a constant that can be adjusted based on the game mechanics and controls the amount of exploration. The theoretical optimum
+is $\sqrt{2}$, which is what we picked for HexMage.
+
+One of the advantages of MCTS is that unlike minimax, it grows the search tree asymmetrically towards
+the most promising actions.
 
 \section{Implementation of MCTS and high level actions}
 
@@ -72,7 +94,7 @@ might be out of range.
 One thing we explicitly do not consider is moving towards an enemy without the intent
 of using an ability or hiding. A player could theoretically move into a position
 that is vulnerable, but at the same time not allowing him to use an ability afterwards.
-We made this decision based on the layout of our map \todo{fig reference} which should
+We made this decision based on the layout of our map which should
 almost always allow the player to move forward while also hiding behind cover.
 
 \section{Playout}
@@ -99,7 +121,13 @@ for positional information.
 The main benefit of the playout strategy is measuring the effect of debuffs, AOEs and cooldowns,
 which unlike damage/health would be difficult to calculate in closed form given a state of the game.
 
-\missingfigure{pridat graf rychlosti iteraci DefaultPolicy vs RuleBasedAction}
+Our hypothesis is that MCTS can play reasonably well even against a human
+player, which is later tested in an experiment (see
+\hyperref[chapter05]{Chapter 5}).  Next we built a \emph{Rule based AI} which
+picks its actions based on a fixed set of predefined rules. These are mostly
+designed for an aggressive-style gameplay in order to make simulated games
+shorter. Lastly, we present a \emph{Random AI} which makes uniform random
+choice of actions from a pool of generated actions.
 
 \section{Rule based AI}
 

@@ -1,7 +1,13 @@
 \chapter{Experiments}
 \label{chapter05}
 
-\begin{table}
+\section{Comparing AIs against each other}
+
+To compare the strength of our AIs against each other, we simulated 1000 randomly generated games
+and had the AIs play against each other. Both teams were generated at random and there was no step taken
+to make them balanced. Instead, each AI played both sides of the match. See \hyperref[tab:winrates]{Table 5.1} for results.
+
+\begin{table}[h]
 	\centering
 	\begin{tabular}{|| c | c c c ||}
 		\hline
@@ -14,8 +20,18 @@
 	\end{tabular}
 	\label{tab:winrates}
 	\caption{Table showing win percentages over 1000 games between our different AI implementations.
-	MCTS beats Random 88\% of the time, MCTS beats Rule XX\% of the time, and Rule beats Random XX\% of the time.}
+	MCTS beats Random 88\% of the time, MCTS beats Rule 63\% of the time, and Rule beats Random 82\% of the time.}
 \end{table}
+
+As we can see, both MCTS and the Rule Based AI can beat our Random AI with a significant margin,
+and MCTS can also consistently beat the Rule Based AI, despite playing for both generated teams.
+From this we conclude that:
+
+\begin{enumerate}
+	\item A greedy aggressive strategy doesn't always win, which means the game mechanics are rich enough
+	to reward strategic thinking.
+	\item Thinking ahead (as MCTS does) provides enough value to be significant in terms of win rate.
+\end{enumerate}
 
 \missingfigure{vysledky jiny nez experiment}
 
