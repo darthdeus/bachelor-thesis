@@ -91,8 +91,16 @@ criteria:
     both teams.
 \end{description}
 
-The combined fitness function is calculated as the average of the three. See \hyperref[fig:converging-es]{Figure 4.1} for an example
+The combined fitness function is calculated as the average of the three.
+See \hyperref[fig:converging-es]{Figure 4.1} for an example
 plot of how the fitness function converges using Evolution Strategies.
+It is worth noting here that evaluating the fitness function (the \emph{Balance}
+part specifically) is computationally intensive, as it requires the whole game
+to be played out till the end. We also do this evaluation using an ensemble average of multiple different AIs.
+Specifically, we use both the Rule based AI and MCTS in the \emph{Balance} playout and take their average.
+This helps assure that the game is balanced despite multiple playstyles, as both the Rule based AI and MCTS
+play differently (see \hyperref[tab:winrates]{Table 5.1} for their comparison). You can see how the fitness function
+converges in \hyperref[fig:converging-es]{Figure 4.1}.
 
 \begin{figure}
 	\centering
@@ -102,6 +110,8 @@ plot of how the fitness function converges using Evolution Strategies.
 \end{figure}
 
 \todo{tady neco chybi, prijde mi, ze to nenavazuje}
+
+\section{Remarks}
 
 During the experiment we encountered multiple ways ES tried to exploit the
 game mechanics to maximize the balance fitness function in ways that were
