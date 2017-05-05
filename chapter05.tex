@@ -78,14 +78,16 @@ The questions were the following, answered on scale (1 - definitely no, to 7 - d
 
 \section{Results}
 
+As we can see in \autoref{tab:balance-corr}, the questions for balance strongly correlate.
+
 \begin{table}[h]
 	\centering
 	\begin{tabular}{lrr}
 		\toprule
-		{} &  balanced &    unsure \\
+		{} &  balanced &  unsure \\
 		\midrule
-		balanced &  1.000000 &  0.725469 \\
-		unsure   &  0.725469 &  1.000000 \\
+		balanced &      1.00 &    0.73 \\
+		unsure   &      0.73 &    1.00 \\
 		\bottomrule
 	\end{tabular}
 	\caption{Correlation table between people who said the game was balanced and who were unsure about the result.}	
@@ -96,41 +98,79 @@ The questions were the following, answered on scale (1 - definitely no, to 7 - d
 	\centering
 	\begin{tabular}{lrrrr}
 		\toprule
-		{} &  challenge &     smart &  difficult &  strategy \\
+		{} &  challenge &  smart &  difficult &  strategy \\
 		\midrule
-		challenge &   1.000000 &  0.613178 &   0.457605 &  0.631885 \\
-		smart     &   0.613178 &  1.000000 &   0.392413 &  0.819096 \\
-		difficult &   0.457605 &  0.392413 &   1.000000 &  0.386505 \\
-		strategy  &   0.631885 &  0.819096 &   0.386505 &  1.000000 \\
+		challenge &       1.00 &   0.61 &       0.46 &      0.63 \\
+		smart     &       0.61 &   1.00 &       0.39 &      0.82 \\
+		difficult &       0.46 &   0.39 &       1.00 &      0.39 \\
+		strategy  &       0.63 &   0.82 &       0.39 &      1.00 \\
 		\bottomrule
 	\end{tabular}
 	\caption{Correlation table between people who said the game was challenging, the AI was smart, the game was difficult to play and the AI showed strategic behavior.}
 	\label{tab:difficulty-corr}
 \end{table}
 
-\missingfigure{korelacni matice}
-\missingfigure{grafy}
 
-The results show that most participants consider our MCTS AI to be strong
-enough to provide a challengem which is also proven by the 40\% winrate of
-the participants. \todo{aktualizovat cisla}
+We can also take a look at the responses normalized to $0$ and $1$ where $1$ means
+the response was at least $4$. Looking at \autoref{tab:norm-corr}, we can see that players
+tend to consider the game difficult if they lost and vice versa.
 
-Given the number of played games \todo{overit, ze jich mame dost} we can
+\begin{table}[h]
+	\centering
+	\begin{tabular}{lrrrrrrr}
+		\toprule
+		{} &  balanced &  challenge &  unsure &  smart &  difficult &  strategy &   won \\
+		\midrule
+		balanced  &      1.00 &       0.35 &    0.53 &   0.21 &       0.07 &      0.22 &  0.15 \\
+		challenge &      0.35 &       1.00 &    0.30 &   0.42 &       0.48 &      0.36 & -0.20 \\
+		unsure    &      0.53 &       0.30 &    1.00 &   0.17 &       0.16 &      0.14 &  0.07 \\
+		smart     &      0.21 &       0.42 &    0.17 &   1.00 &       0.49 &      0.79 & -0.32 \\
+		difficult &      0.07 &       0.48 &    0.16 &   0.49 &       1.00 &      0.42 & \cellcolor{blue!25}-0.62 \\
+		strategy  &      0.22 &       0.36 &    0.14 &   0.79 &       0.42 &      1.00 & -0.22 \\
+		won       &      0.15 &      -0.20 &    0.07 &  -0.32 &      -0.62 &     -0.22 &  1.00 \\
+		\bottomrule
+	\end{tabular}
+	\caption{Table of correlations after normalizing reponse values from 1--7 to 0--1 where 1 means the original response was at least 0.}
+	\label{tab:norm-corr}
+\end{table}
+
+The total win rate of the players was only $38\%$, which shows that our MCTS~AI
+is a formidable opponent. \autoref{tab:means} show the mean of the other responses.
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{lr}
+		\toprule
+		{} & mean \\ 
+		\midrule
+		balanced        &       0.60\% \\
+		challenge       &       0.71\% \\
+		unsure  &       0.57\% \\
+		smart   &       0.78\% \\
+		difficult       &       0.76\% \\
+		strategy        &       0.78\% \\
+		\bottomrule
+	\end{tabular}
+	\caption{Table of mean responses to all the questions in the questionnaire.}
+	\label{tab:means}
+\end{table}
+
+Looking further at the results, in $4$ out of the $20$ games the players lost $100\%$ of the time,
+and in $1$ out of the $20$ games the players won $100\%$ of the time. In the resulting $15$ games
+there were both cases when a player won and when a player lost.
+
+Given the number of played games, we can
 rule out the AI having a better setup in most of the scenarios. Based on the
-results, around 35\% \todo{aktualizovat cisla} of the games were balanced,
-which means in the resulting 65\% one of the players had an advantage.
-
+results, around $60\%$  of the games were balanced,
+which means in the resulting $40\%$ one of the players had an advantage.
 We consider this result to be positive as the games were generated without
 any human intervention and weren't altered before running the experiment.
-\todo{link na appendinx s instrukcema na pregenerovani experimentu}
 
-Considering that 35\% of the generated games are balanced, this would allow
+Considering that $60\%$ of the generated games are balanced, this would allow
 the algorithm to be used offline as is to aid design of game levels with
-some manual checking of the resulting games.
-
-If one were to design the encounter completely from scratch to be balanced,
-it would be very difficult given the number of variables that need to be
-optimized.
+some manual checking of the resulting games. If one were to design the encounter
+completely from scratch to be balanced, it would be very difficult given the number
+of variables that need to be optimized.
 
 \section{TODO}
 
