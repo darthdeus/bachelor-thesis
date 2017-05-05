@@ -58,14 +58,14 @@ that represent most of what a player might want to do.
 \item [DefensiveMove] Look for a place on the map that is not visible to the enemy and move there (to avoid damage).
 \end{description}
 
-Combined actions help significantly reduce the depth of the game tree (see \hyperref[fig:gametree]{Figure 3.1} for an example of a game tree). Most
+Combined actions help significantly reduce the depth of the game tree (see \autoref{fig:gametree} for an example of a game tree). Most
 prominent is the fact that we don't allow arbitrary \emph{Move} actions, but
 only \emph{DefensiveMove}.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.95\textwidth]{img/game-tree.png}
-  \caption{An exmple of a MCTS game tree after 100 iterations. Each node
+	\caption{An exmple of a MCTS game tree after 100 iterations. Each node
 contains (from top to bottom) a node identifier, currently active team,
 cumulated reward / total number of visits, and the action type. The nodes are
 also colored based on the team color. The actions are shown in shortcuts to

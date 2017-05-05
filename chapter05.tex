@@ -5,7 +5,7 @@
 
 To compare the strength of our AIs against each other, we simulated 1000 randomly generated games
 and had the AIs play against each other. Both teams were generated at random and there was no step taken
-to make them balanced. Instead, each AI played both sides of the match. See \hyperref[tab:winrates]{Table 5.1} for results.
+to make them balanced. Instead, each AI played both sides of the match. See \autoref{tab:winrates} for results.
 
 \begin{table}[h]
 	\centering
@@ -18,9 +18,9 @@ to make them balanced. Instead, each AI played both sides of the match. See \hyp
 		Random & 12\% & 18\% & N/A \\
 		\hline
 	\end{tabular}
-	\label{tab:winrates}
 	\caption{Table showing win percentages over 1000 games between our different AI implementations.
 	MCTS beats Random 88\% of the time, MCTS beats Rule 63\% of the time, and Rule beats Random 82\% of the time.}
+	\label{tab:winrates}
 \end{table}
 
 As we can see, both MCTS and the Rule Based AI can beat our Random AI with a significant margin,
@@ -61,9 +61,52 @@ games had both teams generated with no manual tweaks or changes. Having some of
 the games hand designed allows us to show that the PCG algorithm can balance
 against constraints that aren't completely random. A hand designed team might
 have features that are rare in the search space. All of the games are played
-against the MCTS based AI\@.
+against the MCTS based AI\@ with a fixed number of iterations.
+
+\section{Questionnaire}
+
+The questions were the following, answered on scale (1 - definitely no, to 7 - definitely yes), showing short codes for \autoref{tab:balance-corr} and \autoref{tab:difficulty-corr}
+
+\begin{description}[]
+	\item[Balanced:] The game balanced.
+	\item[Challenge:] The game was challenging.
+	\item[Unsure:] I wasn't sure who was going to win.
+	\item[Smart:] The AI played smart.
+	\item[Difficult:] The game was difficult.
+	\item[Strategy:] The AI showed strategic thinking.
+\end{description}
 
 \section{Results}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{lrr}
+		\toprule
+		{} &  balanced &    unsure \\
+		\midrule
+		balanced &  1.000000 &  0.725469 \\
+		unsure   &  0.725469 &  1.000000 \\
+		\bottomrule
+	\end{tabular}
+	\caption{Correlation table between people who said the game was balanced and who were unsure about the result.}	
+	\label{tab:balance-corr}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{lrrrr}
+		\toprule
+		{} &  challenge &     smart &  difficult &  strategy \\
+		\midrule
+		challenge &   1.000000 &  0.613178 &   0.457605 &  0.631885 \\
+		smart     &   0.613178 &  1.000000 &   0.392413 &  0.819096 \\
+		difficult &   0.457605 &  0.392413 &   1.000000 &  0.386505 \\
+		strategy  &   0.631885 &  0.819096 &   0.386505 &  1.000000 \\
+		\bottomrule
+	\end{tabular}
+	\caption{Correlation table between people who said the game was challenging, the AI was smart, the game was difficult to play and the AI showed strategic behavior.}
+	\label{tab:difficulty-corr}
+\end{table}
 
 \missingfigure{korelacni matice}
 \missingfigure{grafy}
