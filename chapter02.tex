@@ -2,11 +2,13 @@
 \label{chapter02}
 
 Two teams fight on a hexagonal map (\emph{arena}) of small size (radius of
-5--10 hexes, see \hyperref[fig:arena]{Figure 2.1}). Each team consists of a small number of player controller
+5--10 hexes, see \hyperref[fig:arena]{Figure 2.1}). The map contains empty hexes and walls.
+Each team consists of a small number of player controller
 characters (\emph{mages} for short), and each mage has a small number of
 \emph{abilities}, \emph{health}, and \emph{action points}. Players take turns, during
 which each player has control over one of his mages. The player can issue
-commands to move around the arena and use abilities.
+commands to move around the arena and use abilities. Mages can only walk on empty hexes
+and cannot cast through walls.
 
 There is also an important distinction between a \emph{turn} and a \emph{round}.
 A turn means playing all the actions a single mage can do with his action points,

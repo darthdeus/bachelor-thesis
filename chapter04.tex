@@ -1,9 +1,17 @@
 \chapter{Generating Encounters}
 \label{chapter04}
 
+There are many possible attributes that can be generated. We could change the size of each team,
+the number of abilities of each mage, starting positions of the map, or even change the positions of the walls.
+
 \section{Reducing the Scope of the Problem}
 
-\todo{popsat}
+We chose to reduce the scope by creating a small fixed map on which all encounters will be played and balanced.
+We also fix the team size of both teams to 2 mages, and each mage to 2 abilities. While this significantly reduces
+the possibilities to achieve balance, there are still a lot of parameters that can be tweaked, as described in the next section.
+
+We also put lower and upper bounds on most of the numeric values of attributes of mages and their abilities.
+See attached programmer documentation in the Appendix \todo{dodat odkaz az bude Appendix} for more details about how attributes are represented.
 
 \section{Approach}
 
@@ -13,7 +21,7 @@ approaches, Simulated Annealing \citep{ai-modern} and Evolution Strategies
 
 To make the search algorithms as general as possible, we serialize our
 internal game representation into a single vector of normalized floating
-point values (DNA). The algorithm then doesn't need to understand our game
+point values (DNA). The algorithm then does not need to understand our game
 mechanics and restriction, and can be applied to different configurations of
 the game independently.
 
@@ -28,16 +36,22 @@ a bigger map (or many different maps) would be difficult for the participants,
 and would also take much longer to compute our experimental data.
 
 Taking these restrictions into mind, the DNA would then take up $96$ floating point values,
-specifically: $$2 \text{ Teams} \times 2 \text{ Mages} \times ( HP + AP + \text{ AbilitySize})$$ where $\text{Ability Size} = 11$ since we need to serialize damage, cost, range, cooldown,
+specifically: $$2 \text{ Teams} \times 2 \text{ Mages} \times ( HP + AP + 2 \times \text{AbilitySize}) = 96$$ since $\text{Ability Size} = 11$ as we need to serialize damage, cost, range, cooldown,
 debuff (HP damage, AP damage, lifetime), and AOE (debuff + lifetime).
 
-\section{Simulated Annealing and Evolution Strategies}
+\section{Simulated Annealing}
 
 Our initial implementation of generating the encounters was using Simulated
-Annealing. However, we had difficulty converging to good results \todo{fuj,
-napsat jinak}.
+Annealing \citep{ai-modern}. Simulated annealing works similar to a hill climbing algorithm, except
+that instead of always picking the best neighbour, we use a probability distribution.
+Neighbours with better fitness have a higher probability, but we might still take a path
+downhill. The amount of randomness is controlled by an external variable called temperature (or energy).
+As the algorithm progresses, the temperature is slowly reduced and thus allows it to converge.
+The main advantage over hill climbing is that simulated annealing does not immediately get stuck in a local optima,
+as there is always a chance it will move to a state with lower fitness value.
 
-As a result, we ran an experiment to sample the search space at roughly 20
+However, we had difficulty getting good results and the algorithm
+almost never converged. As a result, we ran an experiment to sample the search space at roughly 20
 million different points, and measured the change in fitness in the
 neighbourhood of each point. We found that in each point's neighbourhood,
 there are roughly 5 times more points that have worse fitness than the ones
@@ -46,12 +60,18 @@ these downward changes were much steeper between 4--7x than the improving
 points. Our suspicion is that this is the main cause of failure of
 Simmulated Annealing, which simply fails to find the upward slope.
 
+\section{Evolution Strategies}
+
 For this reason we chose to try another approach, specificially Evolution
-Strategies. In short, we take the initial DNA vector, generate around 50
-neighbours in the search space, evaluate their fitness and take their weighted
-sum as the new current DNA\@. This process is iterated until a DNA with
-suitable fitness is found. We have found this approach to consistently converge
-much faster than simulated annealing.
+Strategies (ES) \citep{evolution-strategies}. ES works by taking a random sample of the
+neighbourhood of the current value, evaluating the fitness of each of the neighbours, and
+moving to a state that is the weighted average of the neighbours with respect to their fitness.
+This process is iterated until a state with suitable fitness value is found. In our experiments
+we have found this approach to consistently converge much faster than simulated annealing.
+
+ES also yields itself to easy parallelization, especially if the evaluation of the fitness
+function is complicated. Since all of the neighbouring samples are completely independent,
+they can be evaluated completely in parallel.
 
 \section{Choice of the Fitness Function}
 
