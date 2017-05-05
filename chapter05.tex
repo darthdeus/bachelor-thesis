@@ -1,6 +1,22 @@
 \chapter{Experiments}
 \label{chapter05}
 
+\begin{table}
+	\centering
+	\begin{tabular}{|| c | c c c ||}
+		\hline
+		& MCTS & Rule & Random \\
+		\hline\hline
+		MCTS & N/A & 63\% & 88\% \\
+		Rule & 37\%& N/A & 82\% \\
+		Random & 12\% & 18\% & N/A \\
+		\hline
+	\end{tabular}
+	\label{tab:winrates}
+	\caption{Table showing win percentages over 1000 games between our different AI implementations.
+	MCTS beats Random 88\% of the time, MCTS beats Rule XX\% of the time, and Rule beats Random XX\% of the time.}
+\end{table}
+
 \missingfigure{vysledky jiny nez experiment}
 
 \section{Participants}
