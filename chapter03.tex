@@ -4,16 +4,22 @@
 In order to test our encounter balancing approach, we needed to develop an
 AI that can be used to evaluate match setups. Since our game is very
 positional and with complicated effects that can span multiple turns, we
-decided that manual evaluation of the game state would be difficult. There
-is also a large amount of actions possible at each turn, and a game is expected
+conclude that manual evaluation of the game state would be difficult.
+There is also a large amount of actions possible at each turn, and a game is expected
 to last anywhere from 2 to 5 rounds. Given a 2v2 setup, this would yield
 $50^{5*4} \approx 10^{30}$ possible states (50 actions per round, 5 rounds, 4 mages).
-This means a minimax approach is unfeasible as it is impossible to search the whole
-game tree. As a result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS).
 
+A naive approach using minimax \citep{minimax} would not be possible as it could not search the whole game tree.
+Other approaches such as Alpha-Beta pruning \citep{alpha-beta} are also not possible because of
+the difficulty of evaluating the current game state. As a result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS),
+which focuses its search into a small part of the tree. It also doesn't need a state evaluation function,
+as it uses a playout policy to determine if a given game state is good or bad.
 
 We present three different approaches and compare them in their strength,
-specifically a MCTS based AI, a \emph{Rule based AI}, and a \emph{Random AI}.
+specifically a MCTS based AI, a \emph{Rule based AI}, and a \emph{Random AI}. The Random AI will serve
+as a baseline for benchmarking the other AI implementations. The Rule based AI serves to show that the game
+can not be simply won by playing greedily, but rather requires positional gameplay. Our goal is to show
+that MCTS can beat both the Rule based AI and the Random AI.
 
 \section{Monte-Carlo Tree Search}
 
@@ -34,8 +40,7 @@ it has been visited by MCTS, and the total cumulated reward $Q$ based on simulat
 	\item[Backpropagation] Calculate the reward terminal state of the default policy, then update reward/visited counts on the path from $N$ to $R$.
 \end{description}
 
-There are many variants of MCTS, and the one we chose is UCT (\emph{Upper Confidence Bound for Trees}). It uses the Upper-Confidence Bound (UCB) formula to balance \emph{exploration} and \emph{exploitation} of the game tree. Exploration is the tendency
-to choose nodes with the highest reward, and explitation is choosing nodes that have been visited in only a few simulations.
+There are many variants of MCTS, and the one we chose is UCT (\emph{Upper Confidence Bound for Trees}). It uses the Upper-Confidence Bound (UCB) formula to balance \emph{exploration} and \emph{exploitation} of the game tree. Exploration is the tendency to choose nodes with the highest reward, and explitation is choosing nodes that have been visited in only a few simulations.
 
 \begin{equation}
 	\text{UCB} = \frac{Q}{N} + C \cdot \sqrt{\frac{\ln ParentN}{N}}	
@@ -47,7 +52,7 @@ is $\sqrt{2}$, which is what we picked for HexMage.
 One of the advantages of MCTS is that unlike minimax, it grows the search tree asymmetrically towards
 the most promising actions.
 
-\section{Implementation of MCTS and high level actions}
+\subsection{Implementation of MCTS and high level actions}
 
 After some experimentation, we've settled down for three high level actions
 that represent most of what a player might want to do.
@@ -97,7 +102,7 @@ that is vulnerable, but at the same time not allowing him to use an ability afte
 We made this decision based on the layout of our map which should
 almost always allow the player to move forward while also hiding behind cover.
 
-\section{Playout}
+\subsection{Playout}
 
 Given the number of possible actions at each turn, and the number of turns
 needed to finish the game, we decided that a random playout as is generally

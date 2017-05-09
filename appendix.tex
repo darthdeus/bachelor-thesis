@@ -1,0 +1,95 @@
+\chapwithtoc{Appendix}
+\label{appendix}
+
+\section{Implementation overview}
+
+
+The whole project is implemented in C\# on the .NET platform. As such, it is structured
+into multiple Visual Studio \emph{projects} under a single \emph{solution}. A solution is a collection
+of projects that are built together on the .NET platform. The projects are
+the following:
+
+\todo{popsat ze mame replaye}
+
+\begin{description}
+	\item[HexMage.Simulator] Contains all of the game's core logic, as well as implementation of the AIs
+		and encounter balancing. This project is also compatible with Mono on Linux.
+	\item[HexMage.Benchmarks] Small project that wraps all of the experiments in a command line interface.
+		This project is also compatible with Mono on Linux.
+	\item[HexMage.GUI] Contains the GUI of the game, which includes the arena, map editor, team generation
+		and the questionnaire interface. It also has the ability to re-play games stored in replay files.
+	\item[HexMage.Tests] Small project containing just a few unit tests for the most critical features.
+\end{description}
+
+There is also a directory structure under the \emph{data} directory that is used by the projects
+
+\begin{description}
+	\item[data/graphs] Contains GraphViz DOT \citep{graphviz} files for the MCTS tree. These are used mostly for debugging purposes and their generation can be turned on and off by defining a \emph{DOTGRAPH} compile time constant (see \emph{UctAlgorithm.cs} for details). Each iteration of MCTS is stored in a separate file.
+	\item[data/images] Output directory for the generated image graphs from the \emph{graphs} folder.
+	\item[data/manual-teams] Contains manually designed teams for the questionnaire. Each team is stored in its own JSON \citep{json} file.
+	\item[data/questionnaire] Contains the generated encounters for our questionnaire. Each encounter is stored
+	in a separate file. The file format is rather simple and described in \hyperref[dna-format]{the DNA file format section}.
+	\item[data/replays] Contains replays recorded from games in JSON format. Replay recording can be turned on with the \emph{RecordReplays} command line argument. See \hyperref[cmd-args]{the command line section} for more details on how to provide command line arguments.
+	\item[data/save-files] Contains saved DNA results in both the short DNA format and in JSON format (see \autoref{dna-format} for details). This folder is used by the search algorithm, which stores DNA with high enough fitness value.
+\end{description}
+
+There are also a few misc files in the data folder that serve mostly for data processing. Most notably the \path{generate.sh} file contains a Bash \citep{bash} script for generating MCTS tree images from the \path{data/graphs} folder.
+
+\subsection{System Requirements}
+
+All of the code is written for C\# 6.0. The \path{HexMage.GUI} project runs on Windows under .NET framework 4.5 (or newer). It also requires up to date graphics drivers, and optionally audio drivers when running with \texttt{--EnableAudio=true}. The experiments in \path{HexMage.Benchmarks} can be run on Linux under a recent version of Mono (tested on 4.x).
+
+Compiling the whole solution requires Visual Studio 2015 or newer, as C\# 6.0 is required. The \path{HexMage.Benchmarks} and \path{HexMage.Simulator} projects can also be compiled under Mono on Linux.
+
+\subsection{DNA file format}
+\label{dna-format}
+
+The DNA vectors are scored in simple text files. The format is as follows:
+
+\begin{itemize}
+	\item Each team is stored on a separate line.
+	\item The line first contains two numbers, one for the number of mages in a team, and one for the number of abilities of each mage.
+	\item Then follows the serialized vector for each mage in the order the mages were defined.
+	\item Each mage is stored as his health, action points, and a list of abilities.
+	\item Each ability is stored as damage, cost, range, cooldown, debuff, AOE.
+	\item Debuff is stored as damage, action point damage and lifetime.
+	\item AOE is stored as radius and the effect as if it was a debuff.
+\end{itemize}
+
+A reference implementation is in the \path{GenomeLoader.cs} file which contains both serialization and deserialization. Note that the starting positions of the mages are not stored in their DNA, as that information an attribute of the map on which the game is played. See \hyperref[map-format]{the Map file format section} for more details.
+
+We also have an alternative file format for the DNA which can be seen in
+
+\subsection{Map File Format}
+\label{map-format}
+
+The map is stored in a plain JSON file. An example can be found in the \path{data/map.json} file. The file defines the size of the map, whether each hex contains a wall or is empty, and the starting positions of each team. \todo{popsat tohle nekde driv?}. It is important to note that although there can be any number of starting positions on a given map, the team size must not exceed the number of starting positions. If the user tries to start a game with larger teams than the number of starting positions, the program will detect the error and not start the game.
+
+\subsection{Command Line Arguments}
+\label{cmd-args}
+
+All of the important constants are configurable through command line arguments, both for the \path{HexMage.Benchmarks} and \path{HexMage.GUI} projects. The constant defaults are configured in \path{Constants.cs}. When the programs are run, the command line arguments are inspected and set respective values in the \path{Constants.cs} class via reflection. Adding a new command line argument is thus as simple as adding a new property to the \path{Constants.cs} file.
+
+The program is then run as following:
+
+\vspace{.5cm}
+\texttt{HexMage.Benchmarks.exe --EnableSounds=true --TeamsPerGeneration=40}
+\\
+
+will set the \verb|EnableSounds| constant to \verb|true| and \verb|TeamsPerGeneration| to $40$. Constant types are automatically inferred by the reflection mechanism in .NET and can thus be specified without any additional boilerplate. The meaning of each constant is documented in the \path{Constants.cs} file. \todo{zdokumentovat konstanty ve zdrojaku}
+
+\section{Running the Experiments}
+
+There are multiple experiments that can be easily run through the command line via the \path{HexMage.Benchmarks.exe} file (or by running the \path{HexMage.Benchmarks} project in Visual Studio).
+
+The following command line arguments are possible (in addition to the constants defined in \autoref{cmd-args}):
+
+\begin{description}
+	\item[mcts-measure-speed] Runs a MCTS speed benchmark which simply generates a random game and keeps playing it over and over again. The main purpose is for running MCTS itself under a profiler.
+	
+	\item[compare-ai] Runs an AI comparison benchmark. The types of AI that are selected are controlled via the \verb|MctsBenchType| constant (see \autoref{cmd-args}). The selected AIs are run against each other on random games and the resulting win rate is measured.
+	
+	\todo{zadefinovat co je win rate}
+\end{description}
+
+When none of these arguments are specified, the encounter balancing algorithm is run on the questionnaire seed data (see \autoref{survey}).

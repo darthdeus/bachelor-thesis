@@ -44,6 +44,22 @@ gameplay, as they can be used to force the enemy player to move out of position.
 	\label{fig:arena}
 \end{figure}
 
+\section{Map}
+
+The map consists of two types of hexes. \emph{Empty} hexes which can be walked on,
+and \emph{walls}, which can not be stepped and obstruct visibility. The map also contains \emph{starting points}
+for all of the mages. These are part of the map design and must be created before the encounter generation can start. While a map can have an arbitrary amount of starting points, the teams' sizes must be at most the same as the number of starting point per team.
+
+All maps have a hexagonal shape and are defined by their radius. \hyperref[fig:arena]{Figure \ref{fig:arena}} shows an example of a map with a radius of $5$. In order to make testing easy, the game also includes a map editor (see \hyperref[editor]{Editor user documentation}), as shown in \hyperref[fig:map-editor]{Figure \ref{fig:map-editor}}. Maps can be saved to a file and loaded back again at any time (see \hyperref[map-format]{the Map File Format section} for more details).
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.95\textwidth]{img/map-editor.png}
+	\caption{User interface of the map editor, showing a map of a radius of $5$ hexes. Light green are hexes represent walkable surface, dark hexes represent walls. Red and blue hexes represent starting points.}
+	\label{fig:map-editor}
+\end{figure}
+
+\todo{zminit, ze mame replaye}
 
 \section{Simulator}
 
@@ -80,3 +96,8 @@ max hitpoints, ability definitions, etc.), and one that handles all of the
 mutable data, such as current hitpoints, current positions on the map, etc.
 This allowed us to make state copies very fast as well, running only at a few
 microseconds per copy.
+
+\subsection{Replay recording}
+
+The simulator also has a builtin capability for recording replays from a given game. The replay is a recording of all of the actions that occured in a given game, plus a starting state. When replay recording is turned on (see \hyperref[cmd-args]{the Command Line Arguments} section), the simulator records all actions as they are applied to the game state in a list, and when the game finishes it stores the list into a file along with the initial game state.
+
