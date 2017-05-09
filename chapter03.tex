@@ -9,8 +9,8 @@ There is also a large amount of actions possible at each turn, and a game is exp
 to last anywhere from 2 to 5 rounds. Given a 2v2 setup, this would yield
 $50^{5*4} \approx 10^{30}$ possible states (50 actions per round, 5 rounds, 4 mages).
 
-A naive approach using minimax \citep{minimax} would not be possible as it could not search the whole game tree.
-Other approaches such as Alpha-Beta pruning \citep{alpha-beta} are also not possible because of
+A naive approach using minimax \citep{ai-modern} would not be possible as it could not search the whole game tree.
+Other approaches such as Alpha-Beta pruning \citep{ai-modern} are also not possible because of
 the difficulty of evaluating the current game state. As a result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS),
 which focuses its search into a small part of the tree. It also doesn't need a state evaluation function,
 as it uses a playout policy to determine if a given game state is good or bad.
