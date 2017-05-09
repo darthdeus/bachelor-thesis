@@ -28,7 +28,7 @@ promising nodes in the game tree. States are evaluated based on the result of a 
 means picking actions based on a policy until a terminal state is reached, at which point it can be easily
 evaluated. The policy can be for example uniform sampling of the possible actions. The result
 of the playout is then used to re-calculate rewards for all the parent nodes up the game tree. For a detailed explanation
-of the algorithm, see \citet{mcts-survey}.
+of the algorithm, see \citep{mcts-survey}.
 
 The MCTS tree consists of nodes which represent game states. Each node keeps two values: the number $N$ of times
 it has been visited by MCTS, and the total cumulated reward $Q$ based on simulations. Overall, the algorithm consists of four steps:
@@ -46,8 +46,7 @@ There are many variants of MCTS, and the one we chose is UCT (\emph{Upper Confid
 	\text{UCB} = \frac{Q}{N} + C \cdot \sqrt{\frac{\ln ParentN}{N}}	
 \end{equation}
 
-$C$ is a constant that can be adjusted based on the game mechanics and controls the amount of exploration. The theoretical optimum
-is $\sqrt{2}$, which is what we picked for HexMage.
+$C$ is a constant that can be adjusted based on the game mechanics and controls the amount of exploration. The theoretical optimum is $\sqrt{2}$ \citep{mcts-survey}, which is what we picked for HexMage.
 
 One of the advantages of MCTS is that unlike minimax, it grows the search tree asymmetrically towards
 the most promising actions.
@@ -106,7 +105,7 @@ almost always allow the player to move forward while also hiding behind cover.
 
 Given the number of possible actions at each turn, and the number of turns
 needed to finish the game, we decided that a random playout as is generally
-suggested with MCTS is not feasible (see \citet{mcts-survey}). The games
+suggested with MCTS is not feasible \citep{mcts-survey}. The games
 are usually short (between 2--5 rounds), which means a single bad action can decide
 the whole game. A uniform action selection would not yield a representative playout.
 
