@@ -23,12 +23,11 @@ that MCTS can beat both the Rule based AI and the Random AI.
 
 \section{Monte-Carlo Tree Search}
 
-Monte-Carlo tree search is a heuristic search algorithm that focuses its search on the most
+Monte-Carlo tree search \citep{mcts-survey} is a heuristic search algorithm that focuses its search on the most
 promising nodes in the game tree. States are evaluated based on the result of a \emph{playout}, which
 means picking actions based on a policy until a terminal state is reached, at which point it can be easily
 evaluated. The policy can be for example uniform sampling of the possible actions. The result
-of the playout is then used to re-calculate rewards for all the parent nodes up the game tree. For a detailed explanation
-of the algorithm, see \citep{mcts-survey}.
+of the playout is then used to re-calculate rewards for all the parent nodes up the game tree.
 
 The MCTS tree consists of nodes which represent game states. Each node keeps two values: the number $N$ of times
 it has been visited by MCTS, and the total cumulated reward $Q$ based on simulations. Overall, the algorithm consists of four steps:

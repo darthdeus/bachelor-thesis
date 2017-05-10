@@ -1,7 +1,7 @@
 \chapter{Implementation overview}
 \label{implementation-overview}
 
-The whole project is implemented in C\# on the .NET platform. As such, it is structured
+The whole project is implemented in \Csh{} on the .NET platform. As such, it is structured
 into multiple Visual Studio \emph{projects} under a single \emph{solution}. A solution is a collection
 of projects that are built together on the .NET platform. The projects are
 the following:
@@ -34,9 +34,9 @@ There are also a few misc files in the data folder that serve mostly for data pr
 
 We will now over go the internal structure of the project, the overall architecture and show a few examples on how to use the simulator library.
 
-We chose C\# and the .NET platform since it provides a good balance of programmer productivity and performance. C\#, while being a high level language, still has the ability to control memory layout of objects to some extent. Most importantly, it has the \verb|struct| keyword which allows for objects which are allocated in-place and have copy semantics, contrast to Java, where all objects are dynamically allocated on the heap. This feature allows for compact representation of data and thus improves locality.
+We chose \Csh{} and the .NET platform since it provides a good balance of programmer productivity and performance. \Csh{}, while being a high level language, still has the ability to control memory layout of objects to some extent. Most importantly, it has the \verb|struct| keyword which allows for objects which are allocated in-place and have copy semantics, contrast to Java, where all objects are dynamically allocated on the heap. This feature allows for compact representation of data and thus improves locality.
 
-On the other hand, C\# also provides high level primitives in the form of LINQ and the Task Parallel Library \citep{tpl} (see \autoref{threading-tpl}). An example of where this is used is projectiles, where one can create a projectile and \verb|await| the task that represents the projectile hitting the target, and chain an animation afterwards. While developing, we also made heavy use of the advanced profiling tools provided for the .NET ecosystem, most notably dotTrace \citep{dot-trace}.
+On the other hand, \Csh{} also provides high level primitives in the form of LINQ and the Task Parallel Library \citep{tpl} (see \autoref{threading-tpl}). An example of where this is used is projectiles, where one can create a projectile and \verb|await| the task that represents the projectile hitting the target, and chain an animation afterwards. While developing, we also made heavy use of the advanced profiling tools provided for the .NET ecosystem, most notably dotTrace \citep{dot-trace}.
 
 \section{Performance}
 \todo{presunout pod 5.3 simulator?}
@@ -53,7 +53,7 @@ We have spent a considerable amount of time optimizing the simulator to run as f
 
 The GUI is written using the MonoGame \citep{monogame} library (version 3.5), which provides capabilities such as sprite rendering and user input handling. It also asset loading (textures, sprites, fonts) and compiles them together with the application. All of the assets can be found under \path{HexMage.GUI/Content}. Most of the graphics was done using the Aseprite \citep{aseprite} pixel art editor. Now onto the project structure.
 
-We chose MonoGame because we wanted to use a higher level language (see \autoref{sec:impl-details}), and given the performance constraints, the only choice was between C\# with MonoGame and Java with libGDX \citep{libgdx}. We chose C\# as it has the tools for more compact data structures and better development tools. We didn't consider larger game engines such as Unity3D \citep{unity3d} since our game is rather simple, and we wanted to avoid spending most of the time trying to figure out how to do particular things in a big framework, but rather focus on the important parts.
+We chose MonoGame because we wanted to use a higher level language (see \autoref{sec:impl-details}), and given the performance constraints, the only choice was between \Csh with MonoGame and Java with libGDX \citep{libgdx}. We chose \Csh as it has the tools for more compact data structures and better development tools. We didn't consider larger game engines such as Unity3D \citep{unity3d} since our game is rather simple, and we wanted to avoid spending most of the time trying to figure out how to do particular things in a big framework, but rather focus on the important parts.
 
 The game is organized into \emph{Scenes}, where each Scene represents a single screen for the user. The scenes are the following (located under \path{HexMage.GUI/Scenes}):
 
@@ -108,6 +108,7 @@ Our main game loop is encapsulated by the \verb|GameEventHub| class. It does not
 
 There is one special case though. Since we're not using threading in the UI, but rather asynchronously queued tasks in the event loop, we can't simply block and wait for the \verb|PlayerController| to respond with a given action, as that would freeze the game UI. Instead, we provide two different implementations of the game loop.
 
+\todo{huh tady neco chybi}
 \begin{description}
 	\item[label] description
 \end{description}

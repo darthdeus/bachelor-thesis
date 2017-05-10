@@ -1,4 +1,24 @@
 \chapter{Programmer Documentation}
+\label{chap:prog-doc}
+
+\section{Used Libraries}
+\label{sec:libraries}
+
+While developing desktop GUI applications on Windows provides us with many options, the choices narrow down significantly when the application is a game. As we already established earlier, our choice of language is \Csh{} as it provides the ability to write high level code while maintaining key performance characteristics such as in-place allocated value objects \citep{highperf-dotnet}. Firstly there is Windows Forms \citep{winforms} and Windows Presentation Foundation \citep{wpf} (WPF), which are both excellent desktop GUI libraries, but are not fit for building games as generally require a completely custom user interface. While both Windows Forms and WPF have the ability to embed an OpenGL or DirectX context as a component in their native window components, such approach forfeits all of the benefits of the library and forces the user to implement everything by hand.
+
+Then there is the Unity3D game engine \citep{unity3d} which has a large number of features game developers could need. Unfortunately Unity3D brings its own build system and enforces the developer to structure his game the way Unity3D developers intended. The engine is mostly built for 3D games (with some support for 2D) and as such provides lots of advanced features mainly useful to game developers building larger games. More importantly, Unity3D does not provide any support for tile based movement, hexagonal grids, pathfinding on custom tile-based map, and has a very complicated user interface library tailored mostly for cross platform development. In result, we conclude that using Unity3D would result in us building a lot of things from scratch anyway.
+
+This leaves us with the last contender, which is MonoGame \citep{monogame}, a successor of the previously famous but no longer maintained XNA \citep{xna}. MonoGame is Open Source and available under the Microsoft Public License \citep{ms-pl}. It abstract away the rendering backend and provides a simple API for rendering sprites. It also handles asset packaging (images, sounds, fonts), user input, and provides some basic data structures and algorithms for computer graphics.
+
+We also make use of the Math.NET Numerics \citep{math-dotnet} library for some numerical computation and probability distribution functions, and Newtonsoft Json.NET \citep{json-dotnet} for serialization and deserialization of the JSON files. Both of these can be installed easily via NuGet \citep{nuget} package manager. MonoGame itself needs to be installed with the installer as defined by the instructions on the website \citep{monogame}. Note we only tested with the version 3.5, but newer releases should be compatible as well.
+
+\section{Compilation Instructions}
+
+There are two ways to compile our project. First is when one wants to run the \path{HexMage.GUI} project, which requires the libraries specified in \autoref{sec:libraries}. These can be installed via NuGet \citep{nuget}, but one also needs to install MonoGame separately in order to use the MonoGame Pipeline Tool \citep{monogame-pipeline}, which compiles the binary assets under \path{HexMage.GUI/Content} to a binary format which MonoGame can load efficiently. This is not required for compiling and running the \path{HexMage.Benchmarks} project.
+
+After the MonoGame Pipeline Tool is installed, use it to open \path{HexMage.GUI/Content/Content.mcgb} and compile the assets (optionally this could be done through the Visual Studio build system). Next, use NuGet from within Visual Studio 2015 to install the packages. This is done by right-clicking on the \path{HexMage} solution in the \emph{Solution Explorer} and clicking on \emph{Restore NuGet Packages}. Lastly, select the \path{HexMage.GUI} project as a startup project and click the \emph{Run} button. The compilation can also be done from within the \emph{Developer Command Prompt for VS 2015} by going into the root \path{HexMage} directory and running \verb|msbuild HexMage.sln|.
+
+Compiling under Mono is similar, but only works for the \path{HexMage.Benchmarks} and \path{HexMage.Simualtor} projects. First go to the \path{HexMage.Benchmarks} directory and run \verb|nuget restore|. Then, build the project either using the Mono command \verb|xbuild| (or \verb|xbuild /p:Configuration=Release| for a Release build), or if the \verb|make| command is available, you can simply run \verb|make| within the project's directory and it will use its \verb|Makefile| to run \verb|xbuild| automatically.
 
 \section{Constants and Command Line Arguments}
 \label{cmd-args}
@@ -26,8 +46,6 @@ The following command line arguments are possible (in addition to the constants 
 	\item[compare-ai] Runs an AI comparison benchmark. The types of AI that are selected are controlled via the \verb|MctsBenchType| constant (see \autoref{cmd-args}). The selected AIs are run against each other on random games and the resulting win rate is measured.
 	
 	\item[space-stats] Samples the search space at random points, looks around at neighbours and measures the ratio of upward/downward slopes with their respective fitness change.
-	
-	\todo{zadefinovat co je win rate}
 \end{description}
 
 When none of these arguments are specified, the encounter balancing algorithm is run on the questionnaire seed data (see \autoref{survey}).
@@ -57,7 +75,9 @@ Another useful class is \verb|ActionGenerator| which can provide some of the log
 
 As described in \autoref{sec:simulator} the \verb|GameInstance| class is the main type in the simulator. It represents the complete encounter together with current game state. Since there are a lot of things that need to be configured, we also provide helpers in the form of \verb|GameSetup| class that can generate a new game with a given map, number of mages, and abilities. 
 
-An important concept we need to describe first is the use of \emph{identifiers} (or handles) throughout the simulator. These are integer types that serve as an identifier of an structure stored and managed internally by the simulator. An example might be using a \verb|int abilityId| parameter instead of a whole \verb|AbilityInfo| class. This allows us to keep the data stored compactly in internal data structures while avoiding unnecessary copying. Since the encounter setup is done only once at the beginning of the game and no abilities/mages are added/removed in the process, we simplified the identifiers to work as indexes directly into the internal array data structures. While this breaks encapsulation to some extent, it allows us to remove a layer of indirection in the form of lookup tables. An example of this might be accessing a \verb|MobInstance| as \verb|game.State.MobInstances[id]|. A reason for direct array access is that C\# doesn't allow the use of arbitrary references and would introduce unnecessary copying in some cases when the client wants to extract an object, modify it, and store it back. This feature could be handled with a new feature of C\# 7 called `ref return values', which allows code to return a reference to a value type from arbitrary functions. However, at the time of writing most of the code C\# 7 was not yet available, which made us stick with the more verbose, yet still functional approach.
+An important concept we need to describe first is the use of \emph{identifiers} (or handles) throughout the simulator. These are integer types that serve as an identifier of an structure stored and managed internally by the simulator. An example might be using a \verb|int abilityId| parameter instead of a whole \verb|AbilityInfo| class. This allows us to keep the data stored compactly in internal data structures while avoiding unnecessary copying. Since the encounter setup is done only once at the beginning of the game and no abilities/mages are added/removed in the process, we simplified the identifiers to work as indexes directly into the internal array data structures.
+
+While this breaks encapsulation to some extent, it allows us to remove a layer of indirection in the form of lookup tables. An example of this might be accessing a \verb|MobInstance| as \verb|game.State.MobInstances[id]|. A reason for direct array access is that \Csh{} doesn't allow the use of arbitrary references and would introduce unnecessary copying in some cases when the client wants to extract an object, modify it, and store it back. This feature could be handled with a new feature of \Csh{} 7 called `ref return values', which allows code to return a reference to a value type from arbitrary functions. However, at the time of writing most of the code \Csh{} 7 was not yet available, which made us stick with the more verbose, yet still functional approach.
 
 \subsection{Encounter Setup}
 
