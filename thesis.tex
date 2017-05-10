@@ -57,6 +57,7 @@
 
 \usepackage{enumitem}
 \usepackage{usebib}
+\usepackage{tikz}
 
 %% Generate PDF/A-2u
 \usepackage[a-2u]{pdfx}
@@ -149,8 +150,8 @@ strong, but different opponent.}
 \include{chapter04}
 \include{chapter05}
 \include{chapter06}
+\include{chapter07}
 
-\include{appendix}
 
 %%% Bibliography
 \include{bibliography}
@@ -164,7 +165,8 @@ strong, but different opponent.}
 
 %%% Abbreviations used in the thesis, if any, including their explanation
 %%% In mathematical theses, it could be better to move the list of abbreviations to the beginning of the thesis.
-\chapwithtoc{List of Abbreviations}
+\include{abbreviations}
+
 
 %%% Attachments to the bachelor thesis, if any. Each attachment must be
 %%% referred to at least once from the text of the thesis. Attachments
@@ -178,6 +180,12 @@ strong, but different opponent.}
 %%% should be uploaded to SIS and optionally also included in the thesis on a~CD/DVD.
 %%% Allowed file formats are specified in provision of the rector no. 23/2016.
 \chapwithtoc{Attachments}
+
+\appendix
+
+\include{app-file-formats}
+\include{app-doc-user}
+\include{app-doc-programmer}
 
 \openright
 \end{document}

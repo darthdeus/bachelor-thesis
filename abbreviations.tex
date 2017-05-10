@@ -1,0 +1,25 @@
+\chapwithtoc{Abbreviations and Terminology}
+
+\begin{description}
+	\item[MCTS] Monte-Carlo Tree Search
+	\item[UCT] Upper Confidence Bound for Trees
+	\item[UCB] Upper Confidence Bound for the multi-armed bandit problem.
+	
+	\item[Winrate] The percentage of games a player has won in a set number of games. For example winning $3$ out of $10$ games gives a $33\%$ winrate
+	
+	\item[Turn] Playing a single mage until the \verb|EndTurn| action is considered a \emph{turn}. Each mage gets to play one turn within a single round.
+	
+	\item[Round] When all mages play their turn it is considered one round. Debuffs and AOEs are calculated at the end of each round, and their lifetime is decreased.
+	
+	\item[Mage] A player or AI controller character.
+	
+	\item[Damage] The effect of reducing health of a character. Ability with $5$ damage reduces the health of the target by $5$.
+	
+	\item[Action point] A resource which can be spent both on movement and ability usage. Moving one hex costs one action point, and using an ability costs as many as is defined in the ability's description.
+	
+	\item[Cooldown] If an ability has an associated \emph{cooldown}, using it disables the ability for the number of rounds as specified by the cooldown attribute.
+
+	\item[Debuff] A temporary effect of an ability which causes the target to low health and action points for a given amount of time. Debuffs have a defined lifetime, which is the number of rounds they last.
+	
+	\item[AOE] Area of Effect debuffs are similar to \emph{Debuffs}, but they're placed on the ground instead of the targeted mage. AOEs have a defined radius which they affect, and they also have an associated debuff which is applied to a mage standing within the radius at the end of a round.
+\end{description}

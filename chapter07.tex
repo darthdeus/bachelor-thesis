@@ -1,0 +1,25 @@
+\chapter{Conclusion}
+\label{chapter06}
+
+We have designed and developed a working game with a simulator, developed multiple
+AI bots, built an algorithm for generating balanced encounters and tested everything
+in a number of experiments.
+
+Our experimental findings confirm that search based procedural generation
+is a viable solution for balancing encounters. While we didn't achieve perfect
+accuracy in generating balanced results, our participants considered around $60\%$
+of the games to be balanced. This is confirmed by our win rate results, where $75\%$
+of the games were not completely won/lost by the players. After manually checking the remaining
+$25\%$ we found that one of the games was actually possible to win, which would raise the accuracy
+to $80\%$. We think of this as a success, as the games were generated with no human input or modifications to the data.
+
+Our MCTS AI also showed to be working very well, as it decisively defeated both the Random, and the Rule based AI.
+It also did well against the human players in the experiment, reaching $62\%$ win rate, and having around $75\%$ of the
+games be voted as \emph{smart} and \emph{challenging} by the participants.
+
+\section{Future work}
+
+There are many opportunities for future work. One would be to develop a more sophisticated fitness function that
+takes into account problems mentioned in \hyperref[chapter05]{Chapter 5}. Team sizes could also be adjusted and allow changing the number of mages in a team and the number of their abilities as part of the evolution. Lastly, one could consider balancing regardless of the map the game is going to be played on, and generate the team such that it can adjust to different scenarios.
+
+We also restricted a few mechanics in order to help things converge faster. For example, healing spells are not allowed in our simulator. Enabling them however runs the risk of games taking much longer, and they might not even finish if the amount of healing is greater than the amount of damage. One could also consider allowing AOE abilities to be targeted on the ground, and not just on the enemy mages. While this is possible in many of the popular games, it greatly increases the number of possible actions in each state where an AOE ability is available.

@@ -1,0 +1,28 @@
+
+\chapter{File formats}
+\label{file-formats}
+
+\section{DNA file format}
+\label{dna-format}
+
+The DNA vectors are scored in simple text files. The format is as follows:
+
+\begin{itemize}
+	\item Each team is stored on a separate line.
+	\item The line first contains two numbers, one for the number of mages in a team, and one for the number of abilities of each mage.
+	\item Then follows the serialized vector for each mage in the order the mages were defined.
+	\item Each mage is stored as his health, action points, and a list of abilities.
+	\item Each ability is stored as damage, cost, range, cooldown, debuff, AOE.
+	\item Debuff is stored as damage, action point damage and lifetime.
+	\item AOE is stored as radius and the effect as if it was a debuff.
+\end{itemize}
+
+A reference implementation is in the \path{GenomeLoader.cs} file which contains both serialization and deserialization. Note that the starting positions of the mages are not stored in their DNA, as that information an attribute of the map on which the game is played. See \hyperref[map-format]{the Map file format section} for more details.
+
+We also have an alternative file format for the DNA which can be seen in
+
+\section{Map File Format}
+\label{map-format}
+
+The map is stored in a plain JSON file \citep{json}. An example can be found in the \path{data/map.json} file. The file defines the size of the map, whether each hex contains a wall or is empty, and the starting positions of each team. \todo{popsat tohle nekde driv?}. It is important to note that although there can be any number of starting positions on a given map, the team size must not exceed the number of starting positions. If the user tries to start a game with larger teams than the number of starting positions, the program will detect the error and not start the game.
+

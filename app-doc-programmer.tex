@@ -1,0 +1,93 @@
+\chapter{Programmer Documentation}
+
+\section{Constants and Command Line Arguments}
+\label{cmd-args}
+
+All of the important constants are configurable through command line arguments, both for the \path{HexMage.Benchmarks} and \path{HexMage.GUI} projects. The constant defaults are configured in \path{Constants.cs}. When the programs are run, the command line arguments are inspected and set respective values in the \path{Constants.cs} class via reflection. Adding a new command line argument is thus as simple as adding a new property to the \path{Constants.cs} file.
+
+The program is then run as following:
+
+\begin{verbatim}
+HexMage.Benchmarks.exe --EnableSounds=true \
+                       --TeamsPerGeneration=40
+\end{verbatim}
+
+will set the \verb|EnableSounds| constant to \verb|true| and \verb|TeamsPerGeneration| to $40$. Constant types are automatically inferred by the reflection mechanism in .NET and can thus be specified without any additional boilerplate. The meaning of each constant is documented in the \path{Constants.cs} file. \todo{zdokumentovat konstanty ve zdrojaku}
+
+\section{Running the Experiments}
+
+There are multiple experiments that can be easily run through the command line via the \path{HexMage.Benchmarks.exe} file (or by running the \path{HexMage.Benchmarks} project in Visual Studio).
+
+The following command line arguments are possible (in addition to the constants defined in \autoref{cmd-args}):
+
+\begin{description}
+	\item[mcts-measure-speed] Runs a MCTS speed benchmark which simply generates a random game and keeps playing it over and over again. The main purpose is for running MCTS itself under a profiler.
+	
+	\item[compare-ai] Runs an AI comparison benchmark. The types of AI that are selected are controlled via the \verb|MctsBenchType| constant (see \autoref{cmd-args}). The selected AIs are run against each other on random games and the resulting win rate is measured.
+	
+	\item[space-stats] Samples the search space at random points, looks around at neighbours and measures the ratio of upward/downward slopes with their respective fitness change.
+	
+	\todo{zadefinovat co je win rate}
+\end{description}
+
+When none of these arguments are specified, the encounter balancing algorithm is run on the questionnaire seed data (see \autoref{survey}).
+
+\section{The Game Loop and GameEventHub}
+
+The main game loop in the GUI is represented by a \verb|GameEventHub| class. During each turn, it queries the game state for the current \verb|IMobController| (see \autoref{sec:writing-custom-ai}) and calls its \verb|SlowPlayTurn| method to have the controller execute the turn. After the call returns, the \verb|GameEventHub| automatically ends the turn and moves on to the next character in the turn order.
+
+If the player wishes to pause the game, the \verb|GameEventHub| will delay the game loop until the game is unpaused, which means the game can only be paused at the end of each turn. This however isn't visible to the user, as they can press pause at any time, and if the AI is currently playing, the game will pause once it finishes its turn.
+
+\section{Writing Custom AI}
+\label{sec:writing-custom-ai}
+
+The simulator is written in a way which makes it easy to extend it with new AI implementations. One only has to implement the \verb|IMobController| interface. Two methods have to be subclassed:
+
+\begin{description}
+	\item[void FastPlayTurn(GameEventHub eventHub)] \hfill \\
+	A synchronous implementation of playing a single turn. The \verb|eventHub| object is how the AI author can perform actions in the currently played game. It exposes a method \verb|void FastPlayAction(UctAction action)| which will take an arbitrary action and execute it on the currently played game. Note that instead of passing an \verb|EndTurnAction| the controller should instead return from the \verb|FastPlayTurn| method. It is the responsibility of the caller to end the turn.
+	
+	\item[Task SlowPlayTurn(GameEventHub eventHub)] \hfill \\
+	An asychronous variant of the above function works exactly the same way, except that the caller \verb|await|s on the returned task. It is used in the GUI game loop which executes asynchronously with the main GUI event loop.
+\end{description}
+
+Another useful class is \verb|ActionGenerator| which can provide some of the logic behind MCTS and the Rule based AI. Namely the \verb|PossibleActions| generates a list of high level actions which MCTS uses in its decision tree. For more detailed information see the API reference in the attachments. Also see \autoref{sec:invariants} for additional information on how to generate and check the validity of actions.
+
+\section{Creating Encounters with GameInstance}
+
+As described in \autoref{sec:simulator} the \verb|GameInstance| class is the main type in the simulator. It represents the complete encounter together with current game state. Since there are a lot of things that need to be configured, we also provide helpers in the form of \verb|GameSetup| class that can generate a new game with a given map, number of mages, and abilities. 
+
+An important concept we need to describe first is the use of \emph{identifiers} (or handles) throughout the simulator. These are integer types that serve as an identifier of an structure stored and managed internally by the simulator. An example might be using a \verb|int abilityId| parameter instead of a whole \verb|AbilityInfo| class. This allows us to keep the data stored compactly in internal data structures while avoiding unnecessary copying. Since the encounter setup is done only once at the beginning of the game and no abilities/mages are added/removed in the process, we simplified the identifiers to work as indexes directly into the internal array data structures. While this breaks encapsulation to some extent, it allows us to remove a layer of indirection in the form of lookup tables. An example of this might be accessing a \verb|MobInstance| as \verb|game.State.MobInstances[id]|. A reason for direct array access is that C\# doesn't allow the use of arbitrary references and would introduce unnecessary copying in some cases when the client wants to extract an object, modify it, and store it back. This feature could be handled with a new feature of C\# 7 called `ref return values', which allows code to return a reference to a value type from arbitrary functions. However, at the time of writing most of the code C\# 7 was not yet available, which made us stick with the more verbose, yet still functional approach.
+
+\subsection{Encounter Setup}
+
+There are multiple ways one can create an encounter. First we describe all of the necessary structures and how to create them:
+
+\begin{description}
+	\item[Map] \hfill \\
+	Represents the whole map, can be either created programatically, or loaded from a file using the \verb|Map.Load(string filename)|. Apart from configuring which hexes are walls and which are empty, it is also important to configure the number and positions of starting points for both teams. The game can not be started with a team larger than the number of starting points for that color.
+	
+	\item[MobManager] \hfill \\
+	Keeps all of the immutable information related to the encounter. This consists of \verb|AbilityInfo| and \verb|MobInfo| instances. There is no need to create the \verb|MobManager| manually as the \verb|GameInstance| will take care of it. One can also provide the \verb|GameInstance| with an existing \verb|MobManager| in case it was created beforehand. Such case might be when de-serializing content from a file for example.
+	
+	\item[AbilityInfo] \hfill \\
+	Represents a single ability of a mage. It must be added to the \verb|GameInstance| exclusively through the use of \verb|AddAbilityWithInfo|, since there is an additional internal setup that must be carried out by the \verb|MobManager|.
+	
+	\item[MobInfo and MobInstance] \hfill \\
+	Together these two structures represent a single mage (called \emph{Mob}, short for \emph{mobile object}, internally). \verb|MobInfo| describes the immutable characteristics, such as maximum amount of health and action points, which abilities are available, and the team the mage was assigned to. Note that there is an extra attribute called \emph{initiative} which detemrines a turn order, but was not used in our experiment or encounter generation to simplify the number of variables that needed to be optimized. \verb|MobInfo| objects can be accessed under \verb|game.MobManager.MobInfos|. The \verb|MobInstance| on the other hand contains all of the \emph{current} information, such as current health and action points, position, and debuffs. As such it is stored in the \verb|GameState| object under \verb|game.state.MobInstances|.
+\end{description}
+
+Apart from the above mentioned, the \verb|GameState| also holds information about cooldowns and AOEs, and keeps track of the state of the game (whether the game has finished or not).
+
+We also provide a simpler abstractions that are not used directly by the simulator, but store the whole encounter directly and are used in serialization. This is handled mostly by the \verb|GenomeLoader| class together with the \verb|Team| and \verb|DNA| objects. Both \verb|Team| and \verb|DNA| represent the same data but in different format, and can be converted between themselves. If one has already serialized a setup and loaded it with the \verb|JsonLoader| object, it can be then converted directly into a \verb|GameInstance| using \verb|GameSetup.UnpackTeamsIntoGame| method (see API documentation for details). Another good reference can be both the \verb|AiRandomController| and \verb|AiRuleBasedController| which are both rather simple and contain only the necessary boilerplate to get things working.
+
+\subsection{Invariants and Action Validation}
+\label{sec:invariants}
+
+Since our game mechanics are rather complicated, we provide a set of runtime checks that verify most of the game mechanics. These can be found under \verb|GameInvariants| and are mostly turned on only when the \verb|DEBUG| compile constant is defined. This is done automatically when doing a Debug build in Visual Studio, and is automatically turned off in Release mode. We made these checks conditional since they can be rather expensive and slow down the simulation a lot.
+
+The class also provides some predicates which are not debug-only and are used by the simulator to check if a given action is valid. For example, one can check if an ability can be used on a target with the \verb|IsAbilityUsable| method. This will check if the target is an enemy, alivem, visible from our current position, if we have enough action points, if the ability is not on cooldown and if the target is within range. These helpers can also serve the programmer developing an AI for our game, as all of the game logic has been encapsulated and the programmer can simply check if some action is valid, without having to implement all of the game rules themself.
+
+\section{Extending the Game UI}
+
+The UI is structured as a tree of \verb|Entity| objects, each with a number of attached \verb|Component| instances. Each \verb|Entity| has an information about its position and a parent relationship. It can also optionally have a \verb|Renderer| attached (subclass of the \verb|IRenderer| interface), which takes care of the actual rendering. The \verb|IRenderer| has a simple interface that only requires implementing a \verb|Render| method, which can do any arbitrary rendering using the MonoGame \citep{monogame} API.
