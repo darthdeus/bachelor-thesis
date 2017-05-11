@@ -12,6 +12,8 @@ This leaves us with the last contender, which is MonoGame \citep{monogame}, a su
 
 We also make use of the Math.NET Numerics \citep{math-dotnet} library for some numerical computation and probability distribution functions, and Newtonsoft Json.NET \citep{json-dotnet} for serialization and deserialization of the JSON files. Both of these can be installed easily via NuGet \citep{nuget} package manager. MonoGame itself needs to be installed with the installer as defined by the instructions on the website \citep{monogame}. Note we only tested with the version 3.5, but newer releases should be compatible as well.
 
+GNU Plot \citep{gnuplot} is also required to generate plots of encounter balancing if the \verb|GnuPlot| constant is set to \verb|true|. It needs to be available in the system \verb|PATH| via \verb|gnuplot.exe| in order to generate the plots (see \verb|GnuPlot.cs| for more details). When the constant is set to \verb|false|, no plots will be generated an the program does not need to be present.
+
 \section{Compilation Instructions}
 \label{sec:compilation}
 
