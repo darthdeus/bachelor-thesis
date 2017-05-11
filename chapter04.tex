@@ -38,28 +38,11 @@ Taking these restrictions into mind, the DNA would then take up $96$ floating po
 specifically: $$2 \text{ Teams} \times 2 \text{ Mages} \times ( HP + AP + 2 \times \text{AbilitySize}) = 96$$ since $\text{Ability Size} = 11$ as we need to serialize damage, cost, range, cooldown,
 debuff (HP damage, AP damage, lifetime), and AOE (debuff + lifetime).
 
-\todo{popsat hillclimbing}
-
 \section{Simulated Annealing}
 
-Our initial implementation of generating the encounters was using Simulated
-Annealing \citep{ai-modern}. Simulated annealing works similar to a hill climbing algorithm, except
-that instead of always picking the best neighbour, we use a probability distribution.
-Neighbours with better fitness have a higher probability, but we might still take a path
-downhill. The amount of randomness is controlled by an external variable called temperature (or energy).
-As the algorithm progresses, the temperature is slowly reduced and thus allows it to converge.
-The main advantage over hill climbing is that simulated annealing does not immediately get stuck in a local optima,
-as there is always a chance it will move to a state with lower fitness value.
+Our initial implementation of generating the encounters was using Simulated Annealing \citep{ai-modern}. Simulated annealing works similar to a hill climbing algorithm, except that instead of always picking the best neighbor, we use a probability distribution. Neighbors with better fitness have a higher probability, but we might still take a path downhill. The amount of randomness is controlled by an external variable called temperature (or energy). As the algorithm progresses, the temperature is slowly reduced and thus allows it to converge. The main advantage over hill climbing is that simulated annealing does not immediately get stuck in a local optima, as there is always a chance it will move to a state with lower fitness value. In contrast, a hill climbing algorithm \citep{ai-modern} would always pick a neighbor with a better fitness value.
 
-However, we had difficulty getting good results and the algorithm
-almost never converged. As a result, we ran an experiment to sample the search space at roughly 20
-million different points, and measured the change in fitness in the
-neighbourhood of each point. We found that in each point's neighbourhood,
-there are roughly 5 times more points that have worse fitness than the ones
-that are an improvement over the current point. We also found that most of
-these downward changes were much steeper between 4--7x than the improving
-points. Our suspicion is that this is the main cause of failure of
-Simmulated Annealing, which simply fails to find the upward slope.
+However, we had difficulty getting good results and the algorithm almost never converged. As a result, we ran an experiment to sample the search space at roughly 20 million different points, and measured the change in fitness in the neighborhood of each point. We found that in each point's neighborhood, there are roughly 5 times more points that have worse fitness than the ones that are an improvement over the current point. We also found that most of these downward changes were much steeper between 4--7x than the improving points. Our suspicion is that this is the main cause of failure of Simulated Annealing, which simply fails to find the upward slope.
 
 \section{Evolution Strategies}
 

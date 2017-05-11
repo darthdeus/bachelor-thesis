@@ -1,13 +1,7 @@
 \chapter{Problem Definition}
 \label{chapter01}
 
-Tactical turn-based games like Duelyst \citep{duelyst} and Faeria \citep{faeria} have become
-very popular in the recent years. It is easy to create more content for such
-games (new spells, monsters, etc.) by simply changing the attributes of
-existing content. However, it is difficult to make sure the game stays
-balanced as the new content is added over time. This is generally done by human
-play-testing \todo{reference} in-house before the game updates are released,
-and takes large amounts of time.
+Tactical turn-based games like Duelyst \citep{duelyst} and Faeria \citep{faeria} have become very popular in the recent years. It is easy to create more content for such games (new spells, monsters, etc.) by simply changing the attributes of existing content. However, it is difficult to make sure the game stays balanced as the new content is added over time. This is generally done by human play-testing in-house before the game updates are released, and takes large amounts of time.
 
 This thesis aims to solve the problem with \emph{procedural content generation}
 (PCG)\@. We define PCG as `the algorithmic creation of game content with
@@ -42,7 +36,7 @@ test games in our PCG algorithm.
 In summary, the goals are:
 
 \begin{itemize}
-\item Design and implement a custom game, both GUI and a simulator.
+\item Design and implement a custom game, both GUI and a simulator of the game mechanics.
 \item Build an AI that can be used to represent the player in terms of skill.
 \item Create an algorithm for generating balanced encounters for our game.
 \end{itemize}
@@ -52,4 +46,4 @@ In summary, the goals are:
 We narrow our scope to turn-based games, since simultaneous move games provide
 an additional challenge when building an AI, which for us is just a means to
 help with PCG\@. Our game zero-sum for two players. We also chose to make the
-game with perfect information. \todo{proc vlastne?}
+game with perfect information to simplify the creation of AIs.

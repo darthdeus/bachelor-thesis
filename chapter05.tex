@@ -6,8 +6,6 @@ into multiple Visual Studio \emph{projects} under a single \emph{solution}. A so
 of projects that are built together on the .NET platform. The projects are
 the following:
 
-\todo{popsat ze mame replaye}
-
 \begin{description}
 	\item[HexMage.Simulator] Contains all of the game's core logic, as well as implementation of the AIs
 		and encounter balancing. This project is also compatible with Mono on Linux.
@@ -38,18 +36,7 @@ We chose \Csh{} and the .NET platform since it provides a good balance of progra
 
 On the other hand, \Csh{} also provides high level primitives in the form of LINQ and the Task Parallel Library \citep{tpl} (see \autoref{threading-tpl}). An example of where this is used is projectiles, where one can create a projectile and \verb|await| the task that represents the projectile hitting the target, and chain an animation afterwards. While developing, we also made heavy use of the advanced profiling tools provided for the .NET ecosystem, most notably dotTrace \citep{dot-trace}.
 
-\section{Performance}
-\todo{presunout pod 5.3 simulator?}
-
-We have spent a considerable amount of time optimizing the simulator to run as fast as possible. Most of the game state related data is stored in tightly packed arrays of structures. This was done to reduce the number of heap allocations and reduce overall pressure on the garbage collector \citep{highperf-dotnet}. It also improves copy time of the game state, which happens during each iteration of the MCTS algorithm.
-
-\todo{popsat vlastni sync context a prokladani vlaken pres framy}
-
-\todo{vypichnout, ze simulator je rychlej}
-
 \section{HexMage.GUI}
-
-\todo{popsat proc vlastni gui knihovnu}
 
 The GUI is written using the MonoGame \citep{monogame} library (version 3.5), which provides capabilities such as sprite rendering and user input handling. It also asset loading (textures, sprites, fonts) and compiles them together with the application. All of the assets can be found under \path{HexMage.GUI/Content}. Most of the graphics was done using the Aseprite \citep{aseprite} pixel art editor. Now onto the project structure.
 
@@ -73,9 +60,9 @@ On top of the scene mechanism, we also provide basic user input handling in the 
 \subsection{Threading and TPL}
 \label{threading-tpl}
 
-While the GUI is single threaded, we make use of the TPL for asynchronous task processing. This is implemented using a custom \verb|SynchronizationContext| subclass, which makes sure asynchronous callbacks are executed within the main event loop of the GUI. Implementation-wise it would have been simpler to use a worker thread and communicate with queues, but our approach provides much easier and flexible API for the developer. By implementing a global \verb|SynchronizationContext| we can make use of the .NET 4.x \verb|async| \citep{async} feature. 
+While the GUI is single threaded, we make use of the TPL for asynchronous task processing. This is implemented using a custom \verb|SynchronizationContext| subclass, which makes sure asynchronous callbacks are executed within the main event loop of the GUI. Implementation-wise it would have been simpler to use a worker thread and communicate with queues, but our approach provides much easier and flexible API for the developer. By implementing a global subclass of \verb|SynchronizationContext| we can make use of the .NET 4.x \verb|async| \citep{async} feature. 
 
-\todo{zkontrolovat v kodu ze jsem neco neprehlid?}
+Callbacks of \verb|async| methods are then automatically scheduled onto our custom event loop and are executed right before the \verb|Layout| and \verb|Update| lifecycle methods are called on the root entities (see \autoref{chap:prog-doc}). This also allows actions to be interleaved with the regular game loop without having to worry about locks and shared mutable state. We still have the ability to execute tasks on a thread pool using the \verb|Task.Run| method from the TPL \citep{tpl}, but at the same time we can specify the callback to run on the game event loop using the await \verb|await| thanks to our custom \verb|SynchronizationContext|.
 
 \section{HexMage.Simulator}
 \label{sec:simulator}
@@ -95,6 +82,13 @@ The main core of our program is the simulator. It contains all of the game rules
 	
 	\item[GameEventHub] Handles the main game loop and handles switching turns between players, and detects whether the game has finished.
 \end{description}
+
+\section{Performance}
+
+We have spent a considerable amount of time optimizing the simulator to run as fast as possible. Most of the game state related data is stored in tightly packed arrays of structures. This was done to reduce the number of heap allocations and reduce overall pressure on the garbage collector \citep{highperf-dotnet}. It also improves copy time of the game state, which happens during each iteration of the MCTS algorithm.
+
+With \verb|DefensiveMove| generation enabled, MCTS can run around $30000$ iterations per second, and the simulator running around $150000$ actions per second (on the Intel i7-5820k Processor \citep{intel-ark}). Note that most of the time is spent on generating high level actions. When \verb|DefensiveMove| actions are disabled, MCTS can run nearly twice as fast since it can avoid re-calculating which positions on the map are safe. Improving the high level action generation is a possibility for future work. More elaborate heuristics could allow MCTS to handle larger map sizes and perform even better as the search depth is limited by the number of iterations it can run within a given amount of time.
+
 
 \subsection{Map implementation}
 
