@@ -1,10 +1,13 @@
 \chapter{Implementation overview}
 \label{implementation-overview}
 
-The whole project is implemented in \Csh{} on the .NET platform. As such, it is structured
+We chose \Csh{} and the .NET platform since it provides a good balance of programmer productivity and performance. \Csh{}, while being a high level language, still has the ability to control memory layout of objects to some extent. Most importantly, it has the \verb|struct| keyword which allows for objects which are allocated in-place and have copy semantics, contrast to Java, where all objects are dynamically allocated on the heap. This feature allows for compact representation of data and thus improves locality.
+
+On the other hand, \Csh{} also provides high level primitives in the form of LINQ and the Task Parallel Library \citep{tpl} (see \autoref{threading-tpl}). An example of where this is used is projectiles, where one can create a projectile and \verb|await| the task that represents the projectile hitting the target, and chain an animation afterwards. While developing, we also made heavy use of the advanced profiling tools provided for the .NET ecosystem, most notably dotTrace \citep{dot-trace}.
+
+Since the whole project is implemented in \Csh{} on the .NET platform. As such, it is structured
 into multiple Visual Studio \emph{projects} under a single \emph{solution}. A solution is a collection
-of projects that are built together on the .NET platform. The projects are
-the following:
+of projects that are built together on the .NET platform. The projects are the following:
 
 \begin{description}
 	\item[HexMage.Simulator] Contains all of the game's core logic, as well as implementation of the AIs
@@ -28,19 +31,13 @@ There is also a directory structure under the \emph{data} directory that is used
 	\item[data/save-files] Contains saved DNA results in both the short DNA format and in JSON format (see \autoref{dna-format} for details). This folder is used by the search algorithm, which stores DNA with high enough fitness value.
 \end{description}
 
-There are also a few misc files in the data folder that serve mostly for data processing. Most notably the \path{generate.sh} file contains a Bash \citep{bash} script for generating MCTS tree images from the \path{data/graphs} folder.
-
-We will now over go the internal structure of the project, the overall architecture and show a few examples on how to use the simulator library.
-
-We chose \Csh{} and the .NET platform since it provides a good balance of programmer productivity and performance. \Csh{}, while being a high level language, still has the ability to control memory layout of objects to some extent. Most importantly, it has the \verb|struct| keyword which allows for objects which are allocated in-place and have copy semantics, contrast to Java, where all objects are dynamically allocated on the heap. This feature allows for compact representation of data and thus improves locality.
-
-On the other hand, \Csh{} also provides high level primitives in the form of LINQ and the Task Parallel Library \citep{tpl} (see \autoref{threading-tpl}). An example of where this is used is projectiles, where one can create a projectile and \verb|await| the task that represents the projectile hitting the target, and chain an animation afterwards. While developing, we also made heavy use of the advanced profiling tools provided for the .NET ecosystem, most notably dotTrace \citep{dot-trace}.
+There are also a few misc files in the data folder that serve mostly for data processing. Most notably the \path{generate.sh} file contains a Bash \citep{bash} script for generating MCTS tree images from the \path{data/graphs} folder. We will now over go the internal structure of the project.
 
 \section{HexMage.GUI}
 
 The GUI is written using the MonoGame \citep{monogame} library (version 3.5), which provides capabilities such as sprite rendering and user input handling. It also asset loading (textures, sprites, fonts) and compiles them together with the application. All of the assets can be found under \path{HexMage.GUI/Content}. Most of the graphics was done using the Aseprite \citep{aseprite} pixel art editor. Now onto the project structure.
 
-We chose MonoGame because we wanted to use a higher level language (see \autoref{sec:impl-details}), and given the performance constraints, the only choice was between \Csh with MonoGame and Java with libGDX \citep{libgdx}. We chose \Csh as it has the tools for more compact data structures and better development tools. We didn't consider larger game engines such as Unity3D \citep{unity3d} since our game is rather simple, and we wanted to avoid spending most of the time trying to figure out how to do particular things in a big framework, but rather focus on the important parts.
+We chose MonoGame because we wanted to use a higher level language, and given the performance constraints, the only choice was between \Csh with MonoGame and Java with libGDX \citep{libgdx}. We chose \Csh as it has the tools for more compact data structures and better development tools. We didn't consider larger game engines such as Unity3D \citep{unity3d} since our game is rather simple, and we wanted to avoid spending most of the time trying to figure out how to do particular things in a big framework, but rather focus on the important parts.
 
 The game is organized into \emph{Scenes}, where each Scene represents a single screen for the user. The scenes are the following (located under \path{HexMage.GUI/Scenes}):
 
@@ -98,11 +95,6 @@ We use a 2-dimensional array to store the hexagonal map (class \verb|HexMap<T>|)
 
 \subsection{Game Events and AI Controllers}
 
-Our main game loop is encapsulated by the \verb|GameEventHub| class. It does not however pick which action each player is doing, that is the job of a \verb|IMobController|. Each AI we implemented has its own implementation of the \verb|IMobController| interface, and there is also one for the human player called \verb|PlayerController|. This allows us to write the game loop without knowing who is going to play the game.
+Our main game loop is encapsulated by the \verb|GameEventHub| class. It does not however pick which action each player is doing, that is the job of a \verb|IMobController|. Each AI we implemented has its own implementation of the \verb|IMobController| interface, and there is also one for the human player called \verb|PlayerController|. This allows us to write the game loop without knowing who is going to play the game. The responsibility of the controller is only to dispatch proper actions during its turn.
 
-There is one special case though. Since we're not using threading in the UI, but rather asynchronously queued tasks in the event loop, we can't simply block and wait for the \verb|PlayerController| to respond with a given action, as that would freeze the game UI. Instead, we provide two different implementations of the game loop.
-
-\todo{huh tady neco chybi}
-\begin{description}
-	\item[label] description
-\end{description}
+Also worth noting that since we're not using threading in the UI, but rather asynchronously queued tasks in the event loop, we can't simply block and wait for the \verb|PlayerController| to respond with a given action, as that would freeze the game UI. Instead, we provide an asynchronous game loop in the form of \verb|GameEventHub.SlowMainLoop|. It handles turn management automatically and all the programmer has to provide is an implementation of the \verb|IMobController| (see \autoref{chap:prog-doc}).

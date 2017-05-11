@@ -11,9 +11,7 @@ $50^{5*4} \approx 10^{30}$ possible states (50 actions per round, 5 rounds, 4 ma
 
 A naive approach using minimax \citep{ai-modern} would not be possible as it could not search the whole game tree.
 Other approaches such as Alpha-Beta pruning \citep{ai-modern} are also not possible because of
-the difficulty of evaluating the current game state. As a result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS),
-which focuses its search into a small part of the tree. It also doesn't need a state evaluation function,
-as it uses a playout policy to determine if a given game state is good or bad.
+the difficulty of evaluating the current game state. As a result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS), which focuses its search into a small part of the tree. It also doesn't need a state evaluation function, as it uses a playout policy to determine if a given game state is good or bad.
 
 We present three different approaches and compare them in their strength,
 specifically a MCTS based AI, a \emph{Rule based AI}, and a \emph{Random AI}. The Random AI will serve
@@ -23,7 +21,7 @@ that MCTS can beat both the Rule based AI and the Random AI.
 
 \section{Monte-Carlo Tree Search}
 
-Monte-Carlo tree search \citep{mcts-survey} is a heuristic search algorithm that focuses its search on the most
+Monte-Carlo Tree Search \citep{mcts-survey} is a heuristic search algorithm that focuses its search on the most
 promising nodes in the game tree. States are evaluated based on the result of a \emph{playout}, which
 means picking actions based on a policy until a terminal state is reached, at which point it can be easily
 evaluated. The policy can be for example uniform sampling of the possible actions. The result
