@@ -1,7 +1,7 @@
 % Metadata to be stored in PDF, see documentation of the pdfx package for more details.
 
-\Author{Name Surname}
-\Title{Thesis title}
-\Keywords{keywords\sep more such\sep yet another}
-\Subject{Abstract of thesis}
+\Author{Jakub Arnold}
+\Title{HexMage - Encounter Balancing in Hex Arena}
+\Keywords{video games\sep encounter balancing\sep hex arena\sep rpg elements}
+\Subject{Procedural content generation (PCG) is mostly examined in the context of map/environment creation, rather than generating the actual game characters. The goal of this thesis is to design a turn-based RPG-like game with perfect information for which we can generate balanced encounters. The game consists of a hex-based arena in which two teams fight. Each team consists of a few player controller characters with unique abilities. We generate the attributes of these abilities in order to make the encounter balanced. We will also build an AI that can be used to automatically play-test the PCG algorithm. The goal is to generate an equally strong, but different opponent.}
 \Publisher{Charles University}
