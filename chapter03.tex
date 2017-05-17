@@ -7,11 +7,11 @@ positional and with complicated effects that can span multiple turns, we
 conclude that manual evaluation of the game state would be difficult.
 There is also a large amount of actions possible at each turn, and a game is expected
 to last anywhere from 2 to 5 rounds. Given a 2v2 setup, this would yield
-$50^{5*4} \approx 10^{30}$ possible states (50 actions per round, 5 rounds, 4 mages).
+$50^{4*5*4} \approx 10^{135}$ possible states (50 actions per turn, 4 turns per round, 5 rounds, 4 mages).
 
-A naive approach using minimax \citep{ai-modern} would not be possible as it could not search the whole game tree.
-Other approaches such as Alpha-Beta pruning \citep{ai-modern} are also not possible because of
-the difficulty of evaluating the current game state. As a result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS), which focuses its search into a small part of the tree. It also doesn't need a state evaluation function, as it uses a playout policy to determine if a given game state is good or bad.
+A naive approach using minimax \citep{ai-modern} would not be possible as it could not search the whole game tree. Other approaches such as Alpha-Beta pruning \citep{ai-modern} are also not possible because of the difficulty of evaluating the current game state. Debuffs, AOEs and cooldowns are difficult to evaluate just by looking at the game state. For example, standing inside of an AOE might cause the mage to lose enough action point that he's not able to use his ability, effectively losing his turn. However, this will only happen in some cases when the AOE has enough of an effect and the mage stands far enough that he has to move and use an ability. Taking visibility into account also increases complexity, as there can be lots of obstacles on the map.
+
+As a result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS), which has both the benefit of not needing a state evaluation function, and searching the tree asymetrically with focus only on the interesting parts.
 
 We present three different approaches and compare them in their strength,
 specifically a MCTS based AI, a \emph{Rule based AI}, and a \emph{Random AI}. The Random AI will serve
@@ -155,7 +155,7 @@ well against a human opponent.
 In order to establish a baseline when evaluating our \emph{Rule based AI} and MCTS\@.
 The \emph{Random AI} uses the same mechanics as MCTS for generating possible actions,
 but choses among them randomly. This can be seen as taking a random walk down
-the MCTS search tree.
+the MCTS search tree, and as such, the Random AI doesn't play completely random.
 
 The benefit of re-using the MCTS tree is that we get a reasonable benchmark against
 both the rule-based AI and MCTS\@. If we generated actions completely at random, the \emph{Random AI}

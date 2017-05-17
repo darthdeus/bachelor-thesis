@@ -39,6 +39,7 @@ In summary, the goals are:
 \item Design and implement a custom game, both GUI and a simulator of the game mechanics.
 \item Build an AI that can be used to represent the player in terms of skill.
 \item Create an algorithm for generating balanced encounters for our game.
+\item Verify that the AI and encounter balancing works by conducting an experiment.
 \end{itemize}
 
 \section{Scope}
@@ -47,3 +48,10 @@ We narrow our scope to turn-based games, since simultaneous move games provide
 an additional challenge when building an AI, which for us is just a means to
 help with PCG\@. Our game zero-sum for two players. We also chose to make the
 game with perfect information to simplify the creation of AIs.
+
+\section{Used technology}
+
+We chose \Csh{} and the .NET platform since it provides a good balance of programmer productivity and performance. \Csh{}, while being a high level language, still has the ability to control memory layout of objects to some extent. Most importantly, it has the \verb|struct| keyword which allows for objects which are allocated in-place and have copy semantics, contrast to Java, where all objects are dynamically allocated on the heap. This feature allows for compact representation of data and thus improves locality.
+
+On the other hand, \Csh{} also provides high level primitives in the form of LINQ and the Task Parallel Library \citep{tpl} (see \autoref{threading-tpl}). An example of where this is used is projectiles, where one can create a projectile and \verb|await| the task that represents the projectile hitting the target, and chain an animation afterwards. While developing, we also made heavy use of the advanced profiling tools provided for the .NET ecosystem, most notably dotTrace \citep{dot-trace}.
+
