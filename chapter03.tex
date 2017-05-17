@@ -11,13 +11,13 @@ $50^{4*5*4} \approx 10^{135}$ possible states (50 actions per turn, 4 turns per 
 
 A naive approach using minimax \citep{ai-modern} would not be possible as it could not search the whole game tree. Other approaches such as Alpha-Beta pruning \citep{ai-modern} are also not possible because of the difficulty of evaluating the current game state. Debuffs, AOEs and cooldowns are difficult to evaluate just by looking at the game state. For example, standing inside of an AOE might cause the mage to lose enough action point that he's not able to use his ability, effectively losing his turn. However, this will only happen in some cases when the AOE has enough of an effect and the mage stands far enough that he has to move and use an ability. Taking visibility into account also increases complexity, as there can be lots of obstacles on the map.
 
-As a result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS), which has both the benefit of not needing a state evaluation function, and searching the tree asymetrically with focus only on the interesting parts.
+As a result, we chose to use \emph{Monte-Carlo Tree Search} (MCTS), which has both the benefit of not needing a state evaluation function, and searching the tree asymmetrically with focus only on the interesting parts.
 
 We present three different approaches and compare them in their strength,
 specifically a MCTS based AI, a \emph{Rule based AI}, and a \emph{Random AI}. The Random AI will serve
 as a baseline for benchmarking the other AI implementations. The Rule based AI serves to show that the game
 can not be simply won by playing greedily, but rather requires positional gameplay. Our goal is to show
-that MCTS can beat both the Rule based AI and the Random AI.
+that MCTS can beat both the Rule based AI and the Random AI\@.
 
 \section{Monte-Carlo Tree Search}
 
@@ -37,7 +37,7 @@ it has been visited by MCTS, and the total cumulated reward $Q$ based on simulat
 	\item[Backpropagation] Calculate the reward terminal state of the default policy, then update reward/visited counts on the path from $N$ to $R$.
 \end{description}
 
-There are many variants of MCTS, and the one we chose is UCT (\emph{Upper Confidence Bound for Trees}). It uses the Upper-Confidence Bound (UCB) formula to balance \emph{exploration} and \emph{exploitation} of the game tree. Exploration is the tendency to choose nodes with the highest reward, and explitation is choosing nodes that have been visited in only a few simulations.
+There are many variants of MCTS, and the one we chose is UCT (\emph{Upper Confidence Bound for Trees}). It uses the Upper-Confidence Bound (UCB) formula to balance \emph{exploration} and \emph{exploitation} of the game tree. Exploitation is the tendency to choose nodes with the highest reward, and exploration is choosing nodes that have been visited in only a few simulations.
 
 \begin{equation}
 	\text{UCB} = \frac{Q}{N} + C \cdot \sqrt{\frac{\ln ParentN}{N}}	
@@ -66,7 +66,7 @@ only \emph{DefensiveMove}.
 \begin{figure}
 	\centering
 	\includegraphics[width=0.95\textwidth]{img/game-tree.png}
-	\caption{An exmple of a MCTS game tree after 100 iterations. Each node
+	\caption{An example of a MCTS game tree after 100 iterations. Each node
 contains (from top to bottom) a node identifier, currently active team,
 cumulated reward / total number of visits, and the action type. The nodes are
 also colored based on the team color. The actions are shown in shortcuts to
@@ -115,12 +115,9 @@ to avoid generating a heatmap on each turn. The strategy is as follows:
 \item If there is no enemy in sight, pick an enemy and move towards him.
 \end{itemize}
 
-Having an aggressive set of rules both makes the games shorter, and allows for faster
-generaiton of actions than that of our \emph{Rule based AI}, since we don't have to account
-for positional information.
+Having an aggressive set of rules both makes the games shorter, and allows for faster generation of actions than that of our \emph{Rule based AI}, since we don't have to account for positional information.
 
-The main benefit of the playout strategy is measuring the effect of debuffs, AOEs and cooldowns,
-which unlike damage/health would be difficult to calculate in closed form given a state of the game.
+The main benefit of the playout strategy is measuring the effect of debuffs, AOEs and cooldowns, which unlike damage/health would be difficult to calculate in closed form given a state of the game.
 
 Our hypothesis is that MCTS can play reasonably well even against a human
 player, which is later tested in an experiment (see
@@ -133,7 +130,7 @@ choice of actions from a pool of generated actions.
 \section{Rule based AI}
 
 To get a reasonable comparison between both MCTS and the \emph{Random AI} we
-built an aggresive \emph{Rule based AI}, which does not simulate the playout in
+built an aggressive \emph{Rule based AI}, which does not simulate the playout in
 any way, and only does simple analysis of the board state before choosing what
 to do. The rule order is as follows:
 
@@ -154,7 +151,7 @@ well against a human opponent.
 
 In order to establish a baseline when evaluating our \emph{Rule based AI} and MCTS\@.
 The \emph{Random AI} uses the same mechanics as MCTS for generating possible actions,
-but choses among them randomly. This can be seen as taking a random walk down
+but chooses among them randomly. This can be seen as taking a random walk down
 the MCTS search tree, and as such, the Random AI doesn't play completely random.
 
 The benefit of re-using the MCTS tree is that we get a reasonable benchmark against

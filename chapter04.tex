@@ -80,7 +80,6 @@ f(40 - \text{length} | 10, 2) &\quad\text{otherwise}
 \end{cases}
 \]
 
-
 where $f$ is the cumulative distribution function for the normal distribution (see \autoref{fig:game-length}). Lastly, $D = \frac{1}{1 + \text{exp}(-60R + 1.5)}$ where $R$ is the euclidean distance between the two teams (normalized to $[0;1]$, see \autoref{fig:team-distance}). Note that the constants the above mentioned formulas were chosen by hand as to fit the game design goals (minimum game length, etc.).
 
 \begin{figure}
@@ -101,7 +100,7 @@ where $f$ is the cumulative distribution function for the normal distribution (s
 \begin{figure}
 	\centering
 	\includegraphics[width=0.75\textwidth]{img/converging-es.png}
-	\caption{An exmple of a how the combined fitness function converges over rougly 1200 iterations. Green dots represent the \emph{Balance} fitness measuring HP percentage left at the end of the game, blue dots represent game length, and purple is the combined fitness. We're not showing team difference data points as in this plot.}
+	\caption{An example of a how the combined fitness function converges over rougly 1200 iterations. Green dots represent the \emph{Balance} fitness measuring HP percentage left at the end of the game, blue dots represent game length, and purple is the combined fitness. We're not showing team difference data points as in this plot.}
 	\label{fig:converging-es}	
 \end{figure}
 

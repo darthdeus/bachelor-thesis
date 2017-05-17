@@ -19,7 +19,7 @@ when debuffs, AOEs, cooldowns and action points are re-calculated (see below).
 Both movement and ability usage costs action points, which are restored at the
 end of the round. Moving one hex costs one action point. The cost of using an
 ability varies, and is one of the parameters that we optimize for when looking
-for a balanaced game. An ability can also have a \emph{cooldown}, which
+for a balanced game. An ability can also have a \emph{cooldown}, which
 prevents repeated usage for a given number of rounds. Note that the cooldown
 can be zero, which means the ability can be used multiple times per turn.
 Abilities also have limited range, which supports positional gameplay.
@@ -106,12 +106,12 @@ The simulator is also built to be high performance and can easily run hundreds
 of thousands to millions of actions per second on a consumer-grade PC\@.
 The state object is split into two parts, one that handles the
 general immutable information that doesn't change as the game progresses (i.e.\
-max hitpoints, ability definitions, etc.), and one that handles all of the
-mutable data, such as current hitpoints, current positions on the map, etc.
+max health, ability definitions, etc.), and one that handles all of the
+mutable data, such as current health, current positions on the map, etc.
 This allowed us to make state copies very fast as well, running only at a few
 microseconds per copy.
 
 \subsection{Replay recording}
 
-The simulator also has a builtin capability for recording replays from a given game. The replay is a recording of all of the actions that occured in a given game, plus a starting state. When replay recording is turned on (see \hyperref[cmd-args]{the Command Line Arguments} section), the simulator records all actions as they are applied to the game state in a list, and when the game finishes it stores the list into a file along with the initial game state.
+The simulator also has a builtin capability for recording replays from a given game. The replay is a recording of all of the actions that occurred in a given game, plus a starting state. When replay recording is turned on (see \hyperref[cmd-args]{the Command Line Arguments} section), the simulator records all actions as they are applied to the game state in a list, and when the game finishes it stores the list into a file along with the initial game state.
 
